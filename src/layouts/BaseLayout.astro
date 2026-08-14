@@ -1,0 +1,180 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { practice, primaryLocation, locations } from '../data/site.js';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path only, e.g. "/about". Defaults to the current page. */
+  canonical?: string;
+  /** Extra JSON-LD nodes for this page (FAQ, breadcrumbs, etc.). */
+  schema?: object[];
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  schema = [],
+  ogType = 'website',
+  noindex = false,
+  bodyClass = '',
+} = Astro.props;
+
+const siteOrigin = Astro.site?.origin ?? 'https://welbornortho.com';
+const canonicalUrl = new URL(canonical ?? Astro.url.pathname, siteOrigin).href.replace(/\/$/, '') || siteOrigin;
+const ogImage = new URL('/og-image.png', siteOrigin).href;
+
+// --- Structured data -------------------------------------------------------
+// Only verified information appears here. No awards, affiliations, education
+// or credentials are asserted, because none have been supplied.
+
+const practiceSchema = {
+  '@context': 'https://schema.org',
+  '@type': ['MedicalBusiness', 'Physician'],
+  '@id': `${siteOrigin}/#practice`,
+  name: practice.name,
+  url: siteOrigin,
+  telephone: '+1-510-724-4600',
+  faxNumber: '+1-510-964-0607',
+  email: practice.email,
+  image: ogImage,
+  medicalSpecialty: 'Orthopedic',
+  description:
+    'Private orthopaedic surgery practice in Pinole, California, led by John Hearst Welborn, MD, treating hand, wrist, shoulder, knee and hip conditions, fractures and injuries.',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: primaryLocation.street,
+    addressLocality: primaryLocation.city,
+    addressRegion: primaryLocation.state,
+    postalCode: primaryLocation.zip,
+    addressCountry: 'US',
+  },
+  areaServed: [
+    'Pinole, CA',
+    'Hercules, CA',
+    'San Pablo, CA',
+    'El Sobrante, CA',
+    'Richmond, CA',
+    'Vallejo, CA',
+    'East Bay, CA',
+  ].map((name) => ({ '@type': 'Place', name })),
+  location: locations
+    .filter((loc) => Boolean(loc.street))
+    .map((loc) => ({
+      '@type': 'Place',
+      name: loc.name,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: loc.street,
+        addressLocality: loc.city,
+        addressRegion: loc.state,
+        postalCode: loc.zip,
+        addressCountry: 'US',
+      },
+    })),
+};
+
+const physicianSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': `${siteOrigin}/#dr-welborn`,
+  name: practice.doctor.fullName,
+  givenName: 'John',
+  familyName: 'Welborn',
+  honorificSuffix: 'MD',
+  jobTitle: 'Orthopaedic Surgeon',
+  url: `${siteOrigin}/about`,
+  worksFor: { '@id': `${siteOrigin}/#practice` },
+  telephone: '+1-510-724-4600',
+};
+
+const jsonLd = [practiceSchema, physicianSchema, ...schema];
+---
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <meta name="theme-color" content="#33566b" />
+    <meta name="color-scheme" content="light" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={practice.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Welborn Orthopedics — John Hearst Welborn, MD, orthopaedic surgery in Pinole, California"
+    />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <meta name="geo.region" content="US-CA" />
+    <meta name="geo.placename" content="Pinole, California" />
+
+    <script is:inline>
+      document.documentElement.classList.remove('no-js');
+    </script>
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+  </head>
+
+  <body class={bodyClass}>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <Nav />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Scroll reveal — one observer for the whole page, disabled when the
+      // visitor has asked for reduced motion.
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const targets = document.querySelectorAll('.reveal');
+
+      if (reduced || !('IntersectionObserver' in window)) {
+        targets.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.06 }
+        );
+        targets.forEach((el) => observer.observe(el));
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,263 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TreatmentCard from '../components/TreatmentCard.astro';
+import CtaSection from '../components/CtaSection.astro';
+import Button from '../components/Button.astro';
+import { regions, entriesByRegion, pathFor, entries } from '../data/conditions.js';
+import { practice } from '../data/site.js';
+
+const siteOrigin = Astro.site?.origin ?? 'https://welbornortho.com';
+
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteOrigin },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Conditions & Treatments',
+      item: `${siteOrigin}/conditions-treatments`,
+    },
+  ],
+};
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Conditions and treatments',
+  itemListElement: entries.map((entry, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: entry.title,
+    url: `${siteOrigin}${pathFor(entry)}`,
+  })),
+};
+---
+
+<BaseLayout
+  title="Conditions & Treatments | Welborn Orthopedics, Pinole CA"
+  description="Orthopaedic conditions and procedures treated in Pinole, California — hand and wrist, shoulder, knee and hip, plus fracture and injury care and second opinions."
+  canonical="/conditions-treatments"
+  schema={[breadcrumbs, itemList]}
+>
+  <!-- ==================== INTRO ==================== -->
+  <section class="page-hero" aria-labelledby="ct-title">
+    <div class="container">
+      <div class="page-hero__copy">
+        <span class="eyebrow">Conditions &amp; treatments</span>
+        <h1 id="ct-title">Orthopaedic care from hand to hip.</h1>
+        <p class="page-hero__lead">
+          Dr. Welborn treats a broad range of musculoskeletal conditions across four areas of the
+          body. Most are managed without surgery. Select a condition to learn what it is, how it is
+          evaluated, and which treatments are typically considered.
+        </p>
+      </div>
+
+      <nav class="jump" aria-label="Jump to a body area">
+        <ul class="jump__list">
+          {
+            regions.map((region) => (
+              <li>
+                <a class="jump__link" href={`#${region.id}`}>
+                  {region.name}
+                  <span class="jump__count">{entriesByRegion(region.id).length}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ==================== REGIONS ==================== -->
+  {
+    regions.map((region, index) => (
+      <section
+        class:list={['section', index % 2 === 1 && 'section--tint', 'section--rule']}
+        id={region.id}
+        aria-labelledby={`${region.id}-heading`}
+      >
+        <div class="container">
+          <header class="region-header reveal">
+            <h2 class="region-header__title" id={`${region.id}-heading`}>
+              {region.name}
+            </h2>
+            <p class="region-header__blurb">{region.blurb}</p>
+          </header>
+
+          <div class="grid entries-grid">
+            {entriesByRegion(region.id).map((entry, i) => (
+              <div class="reveal" style={`--reveal-delay: ${(i % 3) * 70}ms`}>
+                <TreatmentCard
+                  title={entry.title}
+                  href={pathFor(entry)}
+                  summary={entry.cardSummary}
+                  kind={entry.type}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <!-- ==================== NOT LISTED ==================== -->
+  <section class="section section--tight" aria-labelledby="notlisted-heading">
+    <div class="container">
+      <div class="panel panel--tint notlisted reveal">
+        <div>
+          <h2 class="notlisted__title" id="notlisted-heading">Not seeing your condition?</h2>
+          <p class="notlisted__body">
+            This list covers what is most commonly treated, not everything. If you are unsure
+            whether your problem is one Dr. Welborn manages, call the office and describe it — you
+            will get a straight answer, including a recommendation elsewhere if that is the right
+            one.
+          </p>
+        </div>
+        <div class="btn-row notlisted__actions">
+          <Button href={`tel:${practice.phoneHref}`}>Call {practice.phone}</Button>
+          <Button href="/contact#request-an-appointment" variant="secondary">
+            Request an appointment
+          </Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaSection />
+</BaseLayout>
+
+<style>
+  .page-hero {
+    padding-block: clamp(2.75rem, 2rem + 4vw, 5rem) clamp(2.5rem, 2rem + 3vw, 4rem);
+    background:
+      radial-gradient(70% 130% at 90% 0%, rgba(51, 86, 107, 0.07) 0%, transparent 60%),
+      var(--bg);
+  }
+
+  .page-hero__copy {
+    max-width: 46rem;
+  }
+
+  .page-hero h1 {
+    font-size: var(--step-h1);
+    letter-spacing: -0.028em;
+  }
+
+  .page-hero__lead {
+    margin-top: 1.25rem;
+    font-size: var(--step-lead);
+    line-height: 1.62;
+    color: var(--ink-3);
+  }
+
+  /* ---------- Jump nav ---------- */
+  .jump {
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+  }
+
+  .jump__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .jump__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.1rem;
+    min-height: 44px;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    font-size: var(--step-small);
+    font-weight: 550;
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+  }
+
+  .jump__link:hover {
+    border-color: var(--accent);
+    color: var(--accent-deep);
+  }
+
+  .jump__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    padding-inline: 0.35rem;
+    background: var(--accent-tint);
+    border-radius: var(--radius-pill);
+    font-size: 0.75rem;
+    font-weight: 650;
+    color: var(--accent-deep);
+  }
+
+  /* ---------- Entry cards ----------
+     Capped at three columns: four made the summaries too narrow to read, and
+     most regions hold six entries, which fills two even rows. */
+  .entries-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (max-width: 62rem) {
+    .entries-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .entries-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---------- Region headers ---------- */
+  .region-header {
+    max-width: 42rem;
+    margin-bottom: clamp(2rem, 1.5rem + 2vw, 3rem);
+  }
+
+  .region-header__title {
+    font-size: var(--step-h2);
+  }
+
+  .region-header__blurb {
+    margin-top: 1rem;
+    font-size: var(--step-lead);
+    line-height: 1.62;
+    color: var(--ink-3);
+  }
+
+  /* ---------- Not listed ---------- */
+  .notlisted {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    gap: clamp(1.5rem, 1.2rem + 2vw, 3rem);
+    align-items: center;
+  }
+
+  .notlisted__title {
+    font-size: var(--step-h3);
+  }
+
+  .notlisted__body {
+    margin-top: 0.75rem;
+    line-height: 1.7;
+    color: var(--ink-2);
+    max-width: 42rem;
+  }
+
+  @media (max-width: 56rem) {
+    .notlisted {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

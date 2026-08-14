@@ -1,0 +1,321 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactInfo from '../components/ContactInfo.astro';
+import AppointmentForm from '../components/AppointmentForm.astro';
+import { practice, locations, primaryLocation, officeHours, fullAddress } from '../data/site.js';
+
+const siteOrigin = Astro.site?.origin ?? 'https://welbornortho.com';
+const mapEmbed = `https://www.google.com/maps?q=${encodeURIComponent(primaryLocation.mapQuery)}&output=embed`;
+const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(primaryLocation.mapQuery)}`;
+
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteOrigin },
+    { '@type': 'ListItem', position: 2, name: 'Contact', item: `${siteOrigin}/contact` },
+  ],
+};
+---
+
+<BaseLayout
+  title="Contact & Appointments | Welborn Orthopedics, Pinole CA"
+  description="Contact Welborn Orthopedics in Pinole, California. Call (510) 724-4600, find directions to the office, or request an appointment online."
+  canonical="/contact"
+  schema={[breadcrumbs]}
+>
+  <!-- ==================== INTRO ==================== -->
+  <section class="page-hero" aria-labelledby="contact-title">
+    <div class="container">
+      <div class="page-hero__copy">
+        <span class="eyebrow">Contact</span>
+        <h1 id="contact-title">Get in touch with the office.</h1>
+        <p class="page-hero__lead">
+          The fastest way to reach us is by phone during business hours. You can also send an
+          appointment request and the office will follow up.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== LOCATIONS ==================== -->
+  <section class="section section--tight section--surface section--rule" aria-labelledby="offices-heading">
+    <div class="container">
+      <h2 class="visually-hidden" id="offices-heading">Office locations</h2>
+
+      <div class="offices">
+        {
+          locations.map((location, index) => (
+            <div class="offices__item reveal" style={`--reveal-delay: ${index * 80}ms`}>
+              <ContactInfo location={location} detailed />
+            </div>
+          ))
+        }
+
+        {
+          officeHours.verified ? (
+            <div class="offices__item reveal" style="--reveal-delay: 160ms">
+              <h3 class="offices__hours-title">Office Hours</h3>
+              <dl class="offices__hours">
+                {officeHours.days.map((day) => (
+                  <div class="offices__hours-row">
+                    <dt>{day.label}</dt>
+                    <dd>{day.hours || '—'}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ) : (
+            <div class="offices__item reveal" style="--reveal-delay: 160ms">
+              <h3 class="offices__hours-title">Office Hours</h3>
+              <p class="offices__hours-note">{officeHours.note}</p>
+              <a class="link-arrow" href={`tel:${practice.phoneHref}`}>
+                Call {practice.phone}
+              </a>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MAP ==================== -->
+  <section class="section section--tight" aria-labelledby="map-heading">
+    <div class="container">
+      <div class="map-block reveal">
+        <div class="map-block__head">
+          <h2 id="map-heading">Finding the Pinole office</h2>
+          <p class="map-block__address">{fullAddress(primaryLocation)}</p>
+        </div>
+
+        <div class="map" data-map data-src={mapEmbed}>
+          <div class="map__facade" data-map-facade>
+            <svg class="map__art" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+              <rect width="800" height="400" fill="#eef1ec" />
+              <g stroke="#dfe4dc" stroke-width="14" fill="none">
+                <path d="M-20 120H820M-20 280H820M160 -20V420M420 -20V420M640 -20V420" />
+              </g>
+              <g stroke="#e8ebe5" stroke-width="6" fill="none">
+                <path d="M-20 60H820M-20 200H820M-20 350H820M60 -20V420M280 -20V420M540 -20V420M740 -20V420" />
+              </g>
+              <path d="M-20 250 C 180 236, 320 210, 480 168 C 620 132, 720 108, 820 100" stroke="#cfdcd6" stroke-width="18" fill="none" />
+              <circle cx="420" cy="200" r="46" fill="#33566b" fill-opacity="0.08" />
+              <circle cx="420" cy="200" r="9" fill="#33566b" />
+              <path d="M420 200 L420 176" stroke="#33566b" stroke-width="3" stroke-linecap="round" />
+            </svg>
+
+            <div class="map__prompt">
+              <p class="map__prompt-text">
+                The interactive map loads from Google Maps. Nothing is requested from Google until
+                you choose to load it.
+              </p>
+              <button type="button" class="btn map__button" data-map-load>Load interactive map</button>
+              <a class="link-arrow map__directions" href={directionsUrl} target="_blank" rel="noopener">
+                Open in Google Maps
+                <span class="visually-hidden">(opens in a new tab)</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <p class="map__note fine">
+          Free parking is available on site. If you have difficulty finding the entrance, call the
+          office at <a href={`tel:${practice.phoneHref}`}>{practice.phone}</a> and we will direct
+          you.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FORM ==================== -->
+  <section class="section section--tint section--rule" aria-label="Appointment request">
+    <div class="container">
+      <div class="form-wrap reveal">
+        <AppointmentForm />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero {
+    padding-block: clamp(2.75rem, 2rem + 4vw, 5rem) clamp(2.5rem, 2rem + 3vw, 4rem);
+    background:
+      radial-gradient(70% 130% at 90% 0%, rgba(51, 86, 107, 0.07) 0%, transparent 60%),
+      var(--bg);
+  }
+
+  .page-hero__copy {
+    max-width: 42rem;
+  }
+
+  .page-hero h1 {
+    font-size: var(--step-h1);
+    letter-spacing: -0.028em;
+  }
+
+  .page-hero__lead {
+    margin-top: 1.25rem;
+    font-size: var(--step-lead);
+    line-height: 1.62;
+    color: var(--ink-3);
+  }
+
+  /* ---------- Offices ---------- */
+  .offices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: clamp(2rem, 1.4rem + 2.5vw, 3.5rem);
+  }
+
+  .offices__item {
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--ink);
+  }
+
+  .offices__hours-title {
+    font-size: var(--step-h3);
+  }
+
+  .offices__hours {
+    margin-top: 1.5rem;
+  }
+
+  .offices__hours-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.6rem;
+    border-top: 1px solid var(--line-soft);
+    font-size: var(--step-small);
+  }
+
+  .offices__hours-row dt {
+    color: var(--ink-3);
+  }
+
+  .offices__hours-row dd {
+    margin: 0;
+    font-weight: 550;
+    color: var(--ink);
+  }
+
+  .offices__hours-note {
+    margin-top: 0.9rem;
+    margin-bottom: 1.25rem;
+    font-size: var(--step-small);
+    line-height: 1.6;
+    color: var(--ink-3);
+    max-width: 22rem;
+  }
+
+  /* ---------- Map ---------- */
+  .map-block__head {
+    margin-bottom: 1.75rem;
+    max-width: 42rem;
+  }
+
+  .map-block__head h2 {
+    font-size: var(--step-h2);
+  }
+
+  .map-block__address {
+    margin-top: 0.75rem;
+    font-size: var(--step-lead);
+    color: var(--ink-3);
+  }
+
+  .map {
+    position: relative;
+    aspect-ratio: 2 / 1;
+    min-height: 20rem;
+    max-height: 30rem;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: #eef1ec;
+  }
+
+  .map :global(iframe) {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  .map__facade {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .map__art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .map__prompt {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    max-width: 26rem;
+    padding: 1.75rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(6px);
+  }
+
+  .map__prompt-text {
+    font-size: var(--step-small);
+    line-height: 1.6;
+    color: var(--ink-3);
+  }
+
+  .map__note {
+    margin-top: 1.25rem;
+    max-width: 44rem;
+  }
+
+  @media (max-width: 40rem) {
+    .map {
+      aspect-ratio: 3 / 4;
+      max-height: none;
+    }
+  }
+
+  /* ---------- Form ---------- */
+  .form-wrap {
+    max-width: 46rem;
+  }
+</style>
+
+<script>
+  // The map iframe is only requested once the visitor asks for it — this keeps
+  // the page fast and avoids a third-party request no one opted into.
+  const container = document.querySelector<HTMLElement>('[data-map]');
+  const button = document.querySelector<HTMLButtonElement>('[data-map-load]');
+  const facade = document.querySelector<HTMLElement>('[data-map-facade]');
+
+  button?.addEventListener('click', () => {
+    if (!container || !facade) return;
+    const iframe = document.createElement('iframe');
+    iframe.src = container.dataset.src ?? '';
+    iframe.title = 'Map showing the Welborn Orthopedics office in Pinole, California';
+    iframe.loading = 'lazy';
+    iframe.referrerPolicy = 'no-referrer-when-downgrade';
+    iframe.allowFullscreen = true;
+    facade.remove();
+    container.appendChild(iframe);
+    iframe.focus();
+  });
+</script>

@@ -1,0 +1,14 @@
+---
+import EntryPage from '../../components/EntryPage.astro';
+import { entries } from '../../data/conditions.js';
+
+export function getStaticPaths() {
+  return entries
+    .filter((entry) => entry.type === 'condition')
+    .map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+---
+
+<EntryPage entry={entry} />

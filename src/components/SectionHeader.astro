@@ -1,0 +1,35 @@
+---
+/**
+ * SectionHeader — eyebrow + heading + optional intro paragraph.
+ * `level` controls the heading tag so page outlines stay correct.
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  intro?: string;
+  level?: 1 | 2 | 3;
+  center?: boolean;
+  invert?: boolean;
+  id?: string;
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  intro,
+  level = 2,
+  center = false,
+  invert = false,
+  id,
+  class: className = '',
+} = Astro.props;
+
+const Heading = `h${level}` as 'h1' | 'h2' | 'h3';
+---
+
+<header class:list={['section-header', center && 'section-header--center', className]}>
+  {eyebrow && <span class:list={['eyebrow', invert && 'eyebrow--invert']}>{eyebrow}</span>}
+  <Heading class="section-header__title" id={id}>{title}</Heading>
+  {intro && <p class="section-header__intro" style={invert ? 'color: var(--ink-invert-2)' : ''}>{intro}</p>}
+</header>

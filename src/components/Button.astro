@@ -1,0 +1,50 @@
+---
+/**
+ * Button — renders an <a> when `href` is set, otherwise a real <button>.
+ */
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'invert' | 'ghost-invert';
+  type?: 'button' | 'submit' | 'reset';
+  wide?: boolean;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  href,
+  variant = 'primary',
+  type = 'button',
+  wide = false,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'btn',
+  variant !== 'primary' && `btn--${variant}`,
+  wide && 'btn--wide',
+  className,
+]
+  .filter(Boolean)
+  .join(' ');
+
+const isExternal = href?.startsWith('http') || href?.startsWith('tel:') || href?.startsWith('mailto:');
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      class={classes}
+      {...(isExternal && href.startsWith('http') ? { rel: 'noopener' } : {})}
+      {...rest}
+    >
+      <slot />
+    </a>
+  ) : (
+    <button type={type} class={classes} {...rest}>
+      <slot />
+    </button>
+  )
+}

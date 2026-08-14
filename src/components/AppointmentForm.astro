@@ -1,0 +1,591 @@
+---
+/**
+ * AppointmentForm — the appointment request form.
+ *
+ * Where submissions go is controlled by `formEndpoint` in src/data/site.js.
+ * With JavaScript available the form submits in the background and shows an
+ * inline confirmation; without it, the browser posts normally and the endpoint
+ * returns a plain confirmation page. Either way the visitor gets an answer.
+ */
+import { formEndpoint, locations, practice } from '../data/site.js';
+import Button from './Button.astro';
+
+const reasons = [
+  'New injury',
+  'Ongoing or chronic pain',
+  'Hand or wrist concern',
+  'Shoulder concern',
+  'Knee or hip concern',
+  'Fracture or injury follow-up',
+  'Joint replacement evaluation',
+  'Second opinion',
+  'Work-related injury',
+  'Something else — not sure',
+];
+---
+
+<section class="apt" id="request-an-appointment" aria-labelledby="apt-heading">
+  <div class="apt__intro">
+    <span class="eyebrow">Request an appointment</span>
+    <h2 id="apt-heading">Tell us how to reach you.</h2>
+    <p class="apt__lead">
+      Send a few details and the office will follow up during regular business hours to find a
+      time. If you would rather book by phone, call
+      <a href={`tel:${practice.phoneHref}`}>{practice.phone}</a>.
+    </p>
+  </div>
+
+  <div class="apt__notice" role="note">
+    <h3 class="apt__notice-title">This form is not for emergencies</h3>
+    <p>
+      This form is not monitored for medical emergencies. If you are experiencing a medical
+      emergency, call <a href="tel:911">911</a> or go to the nearest emergency room. For an urgent
+      problem during office hours, call the office at
+      <a href={`tel:${practice.phoneHref}`}>{practice.phone}</a>.
+    </p>
+  </div>
+
+  <form
+    class="apt__form"
+    id="appointment-form"
+    action={formEndpoint}
+    method="post"
+    novalidate
+    data-appointment-form
+  >
+    <div class="apt__grid">
+      <div class="field">
+        <label for="firstName">First name <span class="req" aria-hidden="true">*</span></label>
+        <input
+          type="text"
+          id="firstName"
+          name="firstName"
+          autocomplete="given-name"
+          required
+          aria-required="true"
+        />
+      </div>
+
+      <div class="field">
+        <label for="lastName">Last name <span class="req" aria-hidden="true">*</span></label>
+        <input
+          type="text"
+          id="lastName"
+          name="lastName"
+          autocomplete="family-name"
+          required
+          aria-required="true"
+        />
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone <span class="req" aria-hidden="true">*</span></label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          autocomplete="tel"
+          inputmode="tel"
+          required
+          aria-required="true"
+        />
+      </div>
+
+      <div class="field">
+        <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          autocomplete="email"
+          inputmode="email"
+          required
+          aria-required="true"
+        />
+      </div>
+
+      <fieldset class="field field--full">
+        <legend>Preferred method of contact <span class="req" aria-hidden="true">*</span></legend>
+        <div class="radio-row">
+          <label class="radio">
+            <input type="radio" name="contactMethod" value="Phone" required aria-required="true" />
+            <span>Phone call</span>
+          </label>
+          <label class="radio">
+            <input type="radio" name="contactMethod" value="Text message" />
+            <span>Text message</span>
+          </label>
+          <label class="radio">
+            <input type="radio" name="contactMethod" value="Email" />
+            <span>Email</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label for="location">Preferred office</label>
+        <select id="location" name="location">
+          <option value="No preference">No preference</option>
+          {
+            locations.map((loc) => (
+              <option value={loc.name}>
+                {loc.city}
+                {loc.id === 'vallejo' ? ' — by appointment' : ''}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="reason">General reason for visit</label>
+        <select id="reason" name="reason">
+          <option value="">Select one</option>
+          {reasons.map((reason) => <option value={reason}>{reason}</option>)}
+        </select>
+      </div>
+
+      <div class="field field--full">
+        <label for="message">Short message</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="4"
+          maxlength="1000"
+          aria-describedby="message-help"></textarea>
+        <p class="field__help" id="message-help">
+          A sentence or two is plenty — for example, which joint is bothering you and roughly how
+          long it has been going on. Please leave out detailed medical history and test results.
+        </p>
+      </div>
+
+      <div class="field field--full">
+        <label class="checkbox">
+          <input type="checkbox" name="acknowledged" value="yes" required aria-required="true" />
+          <span>
+            I understand this form is used only to request an appointment, that it is not a secure
+            or HIPAA-compliant messaging system, and that I should not send sensitive medical
+            information through it. <span class="req" aria-hidden="true">*</span>
+          </span>
+        </label>
+      </div>
+    </div>
+
+    {/* Spam trap — hidden from people, tempting to bots. */}
+    <div class="hp" aria-hidden="true">
+      <label for="company">Company</label>
+      <input type="text" id="company" name="company" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="apt__submit">
+      <Button type="submit" data-submit>Send request</Button>
+      <p class="apt__required-note"><span class="req" aria-hidden="true">*</span> Required field</p>
+    </div>
+
+    <div class="apt__status" data-status role="status" aria-live="polite"></div>
+
+    <p class="apt__privacy">
+      The details you send are used only to contact you about scheduling. They are not sold or
+      shared for advertising. See our <a href="/privacy-policy">Privacy Policy</a> for more.
+    </p>
+  </form>
+</section>
+
+<style>
+  .apt {
+    max-width: 46rem;
+  }
+
+  .apt__lead {
+    margin-top: 1.15rem;
+    font-size: var(--step-lead);
+    line-height: 1.6;
+    color: var(--ink-3);
+  }
+
+  .apt__lead a {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* Emergency notice ----------------------------------------------------- */
+  .apt__notice {
+    margin-top: 2rem;
+    padding: 1.15rem 1.35rem;
+    background: #fdf6ee;
+    border: 1px solid #ecd9c0;
+    border-left: 3px solid #b0752f;
+    border-radius: var(--radius);
+  }
+
+  .apt__notice-title {
+    font-size: var(--step-small);
+    font-weight: 650;
+    color: #7c4f18;
+    letter-spacing: 0;
+  }
+
+  .apt__notice p {
+    margin-top: 0.4rem;
+    font-size: var(--step-small);
+    line-height: 1.6;
+    color: #6d4a20;
+  }
+
+  .apt__notice a {
+    color: #7c4f18;
+    font-weight: 600;
+  }
+
+  /* Form ----------------------------------------------------------------- */
+  .apt__form {
+    margin-top: 2rem;
+  }
+
+  .apt__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 40rem) {
+    .apt__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    min-width: 0;
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .field--full {
+    grid-column: 1 / -1;
+  }
+
+  .field label,
+  .field legend {
+    font-size: var(--step-small);
+    font-weight: 600;
+    color: var(--ink);
+    padding: 0;
+  }
+
+  .field legend {
+    margin-bottom: 0.7rem;
+  }
+
+  .req {
+    color: #a2431f;
+    font-weight: 600;
+  }
+
+  input[type='text'],
+  input[type='tel'],
+  input[type='email'],
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.8rem 0.95rem;
+    min-height: 48px;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    color: var(--ink);
+    transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  }
+
+  textarea {
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4 6.5 4 4 4-4' fill='none' stroke='%235c6874' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    background-size: 16px;
+    padding-right: 2.5rem;
+  }
+
+  input:hover,
+  select:hover,
+  textarea:hover {
+    border-color: var(--accent);
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-tint);
+  }
+
+  input[aria-invalid='true'],
+  textarea[aria-invalid='true'],
+  select[aria-invalid='true'] {
+    border-color: #a2431f;
+  }
+
+  .field__error {
+    font-size: var(--step-xs);
+    font-weight: 600;
+    color: #8f3a1a;
+  }
+
+  .field__help {
+    font-size: var(--step-xs);
+    line-height: 1.55;
+    color: var(--ink-3);
+  }
+
+  /* Radios & checkbox ---------------------------------------------------- */
+  .radio-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.65rem 1.05rem;
+    min-height: 46px;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    font-size: var(--step-small);
+    font-weight: 500;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+  }
+
+  .radio:hover {
+    border-color: var(--accent-tint-2);
+  }
+
+  .radio:has(input:checked) {
+    border-color: var(--accent);
+    background: var(--accent-tint);
+    color: var(--accent-deep);
+    font-weight: 600;
+  }
+
+  .radio input,
+  .checkbox input {
+    width: 18px;
+    height: 18px;
+    min-height: 0;
+    flex-shrink: 0;
+    accent-color: var(--accent);
+    margin: 0;
+  }
+
+  .checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    font-size: var(--step-small);
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--ink-2);
+    cursor: pointer;
+  }
+
+  .checkbox input {
+    margin-top: 0.22rem;
+  }
+
+  /* Honeypot ------------------------------------------------------------- */
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* Submit & status ------------------------------------------------------ */
+  .apt__submit {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem 1.25rem;
+    margin-top: 1.75rem;
+  }
+
+  .apt__required-note {
+    font-size: var(--step-xs);
+    color: var(--ink-3);
+  }
+
+  .apt__status:empty {
+    display: none;
+  }
+
+  .apt__status {
+    margin-top: 1.5rem;
+    padding: 1.1rem 1.3rem;
+    border-radius: var(--radius);
+    font-size: var(--step-small);
+    line-height: 1.6;
+    border: 1px solid var(--line);
+  }
+
+  .apt__status[data-state='success'] {
+    background: #f0f6f1;
+    border-color: #c8dfcd;
+    color: #26492f;
+  }
+
+  .apt__status[data-state='error'] {
+    background: #fdf3f0;
+    border-color: #ecccc1;
+    color: #7d3418;
+  }
+
+  .apt__status a {
+    color: inherit;
+    font-weight: 650;
+  }
+
+  .apt__privacy {
+    margin-top: 1.5rem;
+    font-size: var(--step-xs);
+    line-height: 1.6;
+    color: var(--ink-3);
+  }
+
+  button[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-appointment-form]');
+
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const phoneFallback =
+      'Please call the office at <a href="tel:+15107244600">(510) 724-4600</a> and we will be glad to help.';
+
+    const clearErrors = () => {
+      form.querySelectorAll('.field__error').forEach((el) => el.remove());
+      form
+        .querySelectorAll('[aria-invalid="true"]')
+        .forEach((el) => el.removeAttribute('aria-invalid'));
+    };
+
+    const showError = (field: HTMLElement, message: string) => {
+      field.setAttribute('aria-invalid', 'true');
+      const note = document.createElement('p');
+      note.className = 'field__error';
+      note.textContent = message;
+      (field.closest('.field') ?? field.parentElement)?.appendChild(note);
+    };
+
+    const setStatus = (state: 'success' | 'error', html: string) => {
+      status.dataset.state = state;
+      status.innerHTML = html;
+    };
+
+    /** Validates in the browser so people get useful, inline messages. */
+    const validate = () => {
+      clearErrors();
+      let firstInvalid: HTMLElement | null = null;
+
+      const checks: Array<[string, string]> = [
+        ['firstName', 'Please enter your first name.'],
+        ['lastName', 'Please enter your last name.'],
+        ['phone', 'Please enter a phone number where we can reach you.'],
+        ['email', 'Please enter a valid email address.'],
+      ];
+
+      for (const [name, message] of checks) {
+        const input = form.elements.namedItem(name) as HTMLInputElement;
+        const value = input.value.trim();
+        const invalid =
+          !value || (name === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value));
+        if (invalid) {
+          showError(input, message);
+          firstInvalid ??= input;
+        }
+      }
+
+      const method = form.querySelector<HTMLInputElement>('input[name="contactMethod"]:checked');
+      if (!method) {
+        const group = form.querySelector<HTMLElement>('.radio-row')!;
+        const note = document.createElement('p');
+        note.className = 'field__error';
+        note.textContent = 'Please choose how you would like to be contacted.';
+        group.after(note);
+        firstInvalid ??= form.querySelector<HTMLInputElement>('input[name="contactMethod"]');
+      }
+
+      const ack = form.elements.namedItem('acknowledged') as HTMLInputElement;
+      if (!ack.checked) {
+        showError(ack, 'Please confirm you have read the note above.');
+        firstInvalid ??= ack;
+      }
+
+      if (firstInvalid) {
+        firstInvalid.focus();
+        setStatus('error', 'Please check the highlighted fields and try again.');
+        return false;
+      }
+      return true;
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      status.removeAttribute('data-state');
+      status.innerHTML = '';
+
+      if (!validate()) return;
+
+      submit.disabled = true;
+      const originalLabel = submit.textContent;
+      submit.textContent = 'Sending…';
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new FormData(form),
+        });
+
+        const result = await response.json().catch(() => ({}));
+
+        if (response.ok) {
+          form.reset();
+          setStatus(
+            'success',
+            result.message ??
+              'Thank you — your request has been sent. The office will contact you during regular business hours.'
+          );
+        } else {
+          setStatus('error', `${result.message ?? 'Your request could not be sent.'} ${phoneFallback}`);
+        }
+      } catch {
+        setStatus(
+          'error',
+          `Your request could not be sent — you may be offline. ${phoneFallback}`
+        );
+      } finally {
+        submit.disabled = false;
+        submit.textContent = originalLabel;
+      }
+    });
+  }
+</script>

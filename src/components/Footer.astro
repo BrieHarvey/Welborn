@@ -1,0 +1,214 @@
+---
+import { practice, locations, legal, cityLine } from '../data/site.js';
+
+const year = new Date().getFullYear();
+const pinole = locations.find((l) => l.id === 'pinole')!;
+const vallejo = locations.find((l) => l.id === 'vallejo');
+
+const siteLinks = [
+  { label: 'About Dr. Welborn', href: '/about' },
+  { label: 'Conditions & Treatments', href: '/conditions-treatments' },
+  { label: 'Patient Resources', href: '/patient-resources' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Privacy Policy', href: '/privacy-policy' },
+];
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__grid">
+      <div class="site-footer__identity">
+        <p class="site-footer__practice">{practice.name}</p>
+        <p class="site-footer__doctor">{practice.doctor.fullName}</p>
+        <p class="site-footer__specialty">{practice.doctor.specialty}</p>
+      </div>
+
+      <div class="site-footer__block">
+        <h2 class="site-footer__heading">Pinole Office</h2>
+        <address class="site-footer__address">
+          {pinole.street}<br />
+          {cityLine(pinole)}
+        </address>
+        <ul class="site-footer__contact">
+          <li>
+            <span class="site-footer__label">Phone</span>
+            <a href={`tel:${practice.phoneHref}`}>{practice.phone}</a>
+          </li>
+          <li>
+            <span class="site-footer__label">Fax</span>
+            <span>{practice.fax}</span>
+          </li>
+          <li>
+            <span class="site-footer__label">Email</span>
+            <a href={`mailto:${practice.email}`}>{practice.email}</a>
+          </li>
+        </ul>
+      </div>
+
+      {
+        vallejo && (
+          <div class="site-footer__block">
+            <h2 class="site-footer__heading">Vallejo</h2>
+            <address class="site-footer__address">
+              Vallejo, California
+              <br />
+              By Appointment
+            </address>
+            <p class="site-footer__note">
+              Location details available on request —{' '}
+              <a href={`tel:${practice.phoneHref}`}>call the office</a>.
+            </p>
+          </div>
+        )
+      }
+
+      <nav class="site-footer__block" aria-label="Footer">
+        <h2 class="site-footer__heading">Explore</h2>
+        <ul class="site-footer__links">
+          {
+            siteLinks.map((link) => (
+              <li>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <div class="site-footer__legal">
+      <p class="site-footer__emergency">
+        <strong>{legal.emergency}</strong>
+      </p>
+      <p class="site-footer__disclaimer">{legal.disclaimer}</p>
+      <p class="site-footer__copyright">
+        &copy; {year} {practice.name}. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--accent-dark);
+    color: var(--ink-invert-2);
+    padding-block: clamp(3.5rem, 2.6rem + 3.5vw, 5.5rem) 2.5rem;
+    font-size: var(--step-small);
+    line-height: 1.65;
+  }
+
+  .site-footer a {
+    color: var(--ink-invert);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+    transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+
+  .site-footer a:hover {
+    color: #fff;
+    border-bottom-color: rgba(255, 255, 255, 0.7);
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: clamp(2rem, 1.4rem + 2.5vw, 3.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  }
+
+  .site-footer__identity {
+    min-width: 0;
+  }
+
+  .site-footer__practice {
+    font-size: 1.25rem;
+    font-weight: 650;
+    letter-spacing: -0.018em;
+    color: #fff;
+  }
+
+  .site-footer__doctor {
+    margin-top: 0.6rem;
+    color: var(--ink-invert);
+  }
+
+  .site-footer__specialty {
+    font-size: var(--step-xs);
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.52);
+    margin-top: 0.35rem;
+  }
+
+  .site-footer__heading {
+    font-size: var(--step-xs);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 1rem;
+  }
+
+  .site-footer__address {
+    font-style: normal;
+    color: var(--ink-invert);
+  }
+
+  .site-footer__contact {
+    margin-top: 1rem;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .site-footer__label {
+    display: inline-block;
+    min-width: 3.4rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .site-footer__note {
+    margin-top: 0.85rem;
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  .site-footer__links {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .site-footer__links a {
+    border-bottom-color: transparent;
+  }
+
+  .site-footer__links a:hover {
+    border-bottom-color: rgba(255, 255, 255, 0.7);
+  }
+
+  .site-footer__legal {
+    margin-top: clamp(2.75rem, 2rem + 3vw, 4.25rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--line-invert);
+    display: grid;
+    gap: 1rem;
+    max-width: 62rem;
+  }
+
+  .site-footer__emergency {
+    color: var(--ink-invert);
+  }
+
+  .site-footer__emergency strong {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .site-footer__disclaimer,
+  .site-footer__copyright {
+    font-size: var(--step-xs);
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .site-footer__copyright {
+    margin-top: 0.25rem;
+  }
+</style>

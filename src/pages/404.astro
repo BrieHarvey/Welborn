@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import { practice } from '../data/site.js';
+
+const links = [
+  { label: 'About Dr. Welborn', href: '/about' },
+  { label: 'Conditions & Treatments', href: '/conditions-treatments' },
+  { label: 'Patient Resources', href: '/patient-resources' },
+  { label: 'Contact', href: '/contact' },
+];
+---
+
+<BaseLayout
+  title="Page Not Found | Welborn Orthopedics"
+  description="The page you were looking for could not be found. Browse the site or call the office at (510) 724-4600."
+  noindex
+>
+  <section class="nf">
+    <div class="container">
+      <div class="nf__inner">
+        <span class="eyebrow">404</span>
+        <h1>This page could not be found.</h1>
+        <p class="nf__lead">
+          The page may have moved or the address may have been mistyped. The links below cover
+          everything on the site, or you can call the office directly.
+        </p>
+
+        <div class="btn-row nf__buttons">
+          <Button href="/">Back to home</Button>
+          <Button href={`tel:${practice.phoneHref}`} variant="secondary">
+            Call {practice.phone}
+          </Button>
+        </div>
+
+        <nav class="nf__links" aria-label="Site sections">
+          <ul>
+            {links.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    padding-block: clamp(4rem, 3rem + 6vw, 8rem);
+  }
+
+  .nf__inner {
+    max-width: 38rem;
+  }
+
+  .nf h1 {
+    font-size: var(--step-h1);
+    letter-spacing: -0.028em;
+  }
+
+  .nf__lead {
+    margin-top: 1.25rem;
+    font-size: var(--step-lead);
+    line-height: 1.62;
+    color: var(--ink-3);
+  }
+
+  .nf__buttons {
+    margin-top: 2rem;
+  }
+
+  .nf__links {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .nf__links li {
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .nf__links a {
+    display: block;
+    padding-block: 0.85rem;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--dur) var(--ease), padding-left var(--dur) var(--ease);
+  }
+
+  .nf__links a:hover {
+    color: var(--accent-deep);
+    padding-left: 0.35rem;
+  }
+</style>

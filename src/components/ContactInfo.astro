@@ -1,0 +1,165 @@
+---
+/**
+ * ContactInfo — one office location card.
+ * Locations are defined in src/data/site.js.
+ */
+import { cityLine } from '../data/site.js';
+
+interface Props {
+  location: {
+    id: string;
+    name: string;
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+    phone: string;
+    phoneHref: string;
+    fax?: string;
+    email?: string;
+    note?: string;
+    mapQuery?: string;
+  };
+  /** Show the fax and email rows (used on the contact page). */
+  detailed?: boolean;
+}
+
+const { location, detailed = false } = Astro.props;
+const hasStreet = Boolean(location.street);
+const directionsUrl = location.mapQuery
+  ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.mapQuery)}`
+  : '';
+---
+
+<div class="cinfo">
+  <h3 class="cinfo__name">{location.name}</h3>
+
+  <address class="cinfo__address">
+    {
+      hasStreet ? (
+        <Fragment>
+          {location.street}
+          <br />
+          {cityLine(location)}
+        </Fragment>
+      ) : (
+        <Fragment>
+          {location.city}, California
+          <br />
+          <span class="cinfo__byappt">By Appointment</span>
+        </Fragment>
+      )
+    }
+  </address>
+
+  {location.note && <p class="cinfo__note">{location.note}</p>}
+
+  <dl class="cinfo__rows">
+    <div class="cinfo__row">
+      <dt>Phone</dt>
+      <dd><a href={`tel:${location.phoneHref}`}>{location.phone}</a></dd>
+    </div>
+    {
+      detailed && location.fax && (
+        <div class="cinfo__row">
+          <dt>Fax</dt>
+          <dd>{location.fax}</dd>
+        </div>
+      )
+    }
+    {
+      detailed && location.email && (
+        <div class="cinfo__row">
+          <dt>Email</dt>
+          <dd>
+            <a href={`mailto:${location.email}`}>{location.email}</a>
+          </dd>
+        </div>
+      )
+    }
+  </dl>
+
+  {
+    directionsUrl && (
+      <a class="link-arrow cinfo__directions" href={directionsUrl} target="_blank" rel="noopener">
+        Get directions
+        <span class="visually-hidden">to the {location.name} (opens in a new tab)</span>
+      </a>
+    )
+  }
+</div>
+
+<style>
+  .cinfo {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .cinfo__name {
+    font-size: var(--step-h3);
+  }
+
+  .cinfo__address {
+    margin-top: 0.9rem;
+    font-style: normal;
+    font-size: var(--step-lead);
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .cinfo__byappt {
+    color: var(--ink-3);
+    font-size: var(--step-body);
+  }
+
+  .cinfo__note {
+    margin-top: 0.85rem;
+    font-size: var(--step-small);
+    line-height: 1.6;
+    color: var(--ink-3);
+    max-width: 24rem;
+  }
+
+  .cinfo__rows {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .cinfo__row {
+    display: flex;
+    gap: 0.75rem;
+    padding-block: 0.6rem;
+    border-top: 1px solid var(--line-soft);
+    font-size: var(--step-small);
+  }
+
+  .cinfo__row dt {
+    min-width: 3.75rem;
+    color: var(--ink-3);
+  }
+
+  .cinfo__row dd {
+    margin: 0;
+    font-weight: 550;
+    color: var(--ink);
+  }
+
+  .cinfo__row a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-tint-2);
+    transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+
+  .cinfo__row a:hover {
+    color: var(--accent-deep);
+    border-bottom-color: var(--accent);
+  }
+
+  .cinfo__directions {
+    margin-top: 1.5rem;
+    align-self: flex-start;
+  }
+</style>

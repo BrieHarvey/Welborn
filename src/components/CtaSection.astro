@@ -1,0 +1,114 @@
+---
+/**
+ * CtaSection — the appointment call-to-action, reused across pages.
+ * Copy comes from `appointmentCta` in src/data/content.js.
+ */
+import { appointmentCta } from '../data/content.js';
+import { practice } from '../data/site.js';
+import Button from './Button.astro';
+
+interface Props {
+  headline?: string;
+  body?: string;
+}
+
+const { headline = appointmentCta.headline, body = appointmentCta.body } = Astro.props;
+---
+
+<section class="cta on-dark" aria-labelledby="cta-heading">
+  <div class="container">
+    <div class="cta__inner reveal">
+      <h2 class="cta__title" id="cta-heading">{headline}</h2>
+      <p class="cta__body">{body}</p>
+
+      <div class="btn-row cta__buttons">
+        <Button href={appointmentCta.primaryButton.href} variant="invert">
+          {appointmentCta.primaryButton.label}
+        </Button>
+        <Button href={appointmentCta.secondaryButton.href} variant="ghost-invert">
+          {appointmentCta.secondaryButton.label}
+        </Button>
+      </div>
+
+      <p class="cta__phone">
+        <span>Prefer to speak with someone?</span>
+        <a href={`tel:${practice.phoneHref}`}>
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path
+              d="M5.2 2.6 6.6 5 5.3 6.6a8.4 8.4 0 0 0 4.1 4.1L11 9.4l2.4 1.4-.5 2.3-1.6.4C7.5 13.3 2.7 8.5 2 4.7l.4-1.6z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linejoin="round"></path>
+          </svg>
+          <span class="visually-hidden">Call the office at </span>{practice.phone}
+        </a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    padding-block: clamp(4rem, 3rem + 4.5vw, 7rem);
+    background:
+      radial-gradient(120% 130% at 12% 0%, rgba(51, 86, 107, 0.55) 0%, transparent 62%),
+      var(--accent-dark);
+  }
+
+  .cta__inner {
+    max-width: 46rem;
+  }
+
+  .cta__title {
+    font-size: var(--step-h2);
+    color: #fff;
+  }
+
+  .cta__body {
+    margin-top: 1.15rem;
+    font-size: var(--step-lead);
+    line-height: 1.62;
+    color: var(--ink-invert-2);
+    max-width: 40rem;
+  }
+
+  .cta__buttons {
+    margin-top: 2rem;
+  }
+
+  .cta__phone {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.75rem;
+    margin-top: 2.25rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line-invert);
+    font-size: var(--step-small);
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  .cta__phone a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 1.0625rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+    padding-bottom: 1px;
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .cta__phone a:hover {
+    border-bottom-color: #fff;
+  }
+
+  .cta__phone svg {
+    width: 15px;
+    height: 15px;
+  }
+</style>

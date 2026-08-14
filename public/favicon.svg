@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Welborn Orthopedics">
+  <rect width="64" height="64" rx="14" fill="#33566b"/>
+  <path d="M17 44c0-10.2 6.6-16.8 15-16.8S47 33.8 47 44" fill="none" stroke="#ffffff" stroke-width="4.2" stroke-linecap="round"/>
+  <path d="M24 21.6a10.4 10.4 0 0 1 16 0" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="4.2" stroke-linecap="round"/>
+</svg>

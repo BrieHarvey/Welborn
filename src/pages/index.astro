@@ -1,0 +1,588 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import Figure from '../components/Figure.astro';
+import CredentialStrip from '../components/CredentialStrip.astro';
+import CtaSection from '../components/CtaSection.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import { hero, about, continuity } from '../data/content.js';
+import { regions, entriesByRegion } from '../data/conditions.js';
+import { insurance } from '../data/patient-resources.js';
+import { practice, locations, cityLine } from '../data/site.js';
+
+const pinole = locations.find((l) => l.id === 'pinole')!;
+const vallejo = locations.find((l) => l.id === 'vallejo')!;
+---
+
+<BaseLayout
+  title="Welborn Orthopedics | Orthopaedic Surgeon in Pinole & the East Bay"
+  description="J. Hearst Welborn, MD is a board-certified orthopaedic surgeon in Pinole, California, with more than 30 years of experience treating hand, shoulder, knee and hip conditions, fractures and injuries."
+  canonical="/"
+>
+  <!-- ==================== HERO ==================== -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="container hero__inner">
+      <div class="hero__copy">
+        <h1 class="hero__headline" id="hero-heading">{hero.headline}</h1>
+        <p class="hero__subhead">{hero.subhead}</p>
+        <div class="btn-row hero__buttons">
+          <Button href={hero.primaryButton.href}>{hero.primaryButton.label}</Button>
+          <Button href={hero.secondaryButton.href} variant="secondary">
+            {hero.secondaryButton.label}
+          </Button>
+        </div>
+      </div>
+
+      <div class="hero__media">
+        <Figure
+          alt={hero.imageAlt}
+          label="Hero photograph — a warm, human consultation moment. Landscape, approximately 1600 × 1200."
+          variant="motion"
+          ratio="4 / 3"
+          eager
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CREDIBILITY ==================== -->
+  <CredentialStrip />
+
+  <!-- ==================== ABOUT ==================== -->
+  <section class="section about" aria-labelledby="about-heading">
+    <div class="container about__inner">
+      <div class="about__media reveal">
+        <Figure
+          alt={about.imageAlt}
+          label="Portrait of Dr. Welborn. Editorial, natural light, portrait orientation, approximately 1200 × 1500."
+          variant="portrait"
+          ratio="4 / 5"
+        />
+        <ul class="about__credentials">
+          <li>
+            <span class="about__credential-value">30+</span>
+            <span class="about__credential-label">Years in practice</span>
+          </li>
+          <li>
+            <span class="about__credential-value">Private practice</span>
+            <span class="about__credential-label">Physician-led care</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="about__copy reveal" style="--reveal-delay: 90ms">
+        <span class="eyebrow">{about.eyebrow}</span>
+        <h2 class="about__headline" id="about-heading">{about.headline}</h2>
+        <div class="about__body">
+          {about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+        <a class="link-arrow about__link" href={about.link.href}>{about.link.label}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CONTINUITY OF CARE ==================== -->
+  <section class="section section--tint section--rule" aria-labelledby="continuity-heading">
+    <div class="container">
+      <div class="continuity">
+        <div class="continuity__lead reveal">
+          <span class="eyebrow">{continuity.eyebrow}</span>
+          <h2 id="continuity-heading">{continuity.headline}</h2>
+          <p class="lead continuity__body">{continuity.body}</p>
+        </div>
+
+        <ol class="continuity__points">
+          {
+            continuity.points.map((point, index) => (
+              <li class="continuity__point reveal" style={`--reveal-delay: ${index * 90}ms`}>
+                <span class="continuity__num" aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <h3 class="continuity__point-title">{point.title}</h3>
+                <p class="continuity__point-body">{point.body}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== AREAS OF CARE ==================== -->
+  <section class="section" aria-labelledby="areas-heading">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Conditions & treatments"
+        title="Areas of care"
+        intro="From nerve compression in the hand to joint replacement of the knee, evaluation begins with an accurate diagnosis — and very often with treatment that does not involve surgery."
+        id="areas-heading"
+        class="reveal"
+      />
+
+      <div class="grid grid--2 areas">
+        {
+          regions.map((region, index) => (
+            <article class="area reveal" style={`--reveal-delay: ${(index % 2) * 80}ms`}>
+              <h3 class="area__title">
+                <a href={`/conditions-treatments#${region.id}`}>{region.name}</a>
+              </h3>
+              <p class="area__blurb">{region.blurb}</p>
+              <ul class="area__list">
+                {entriesByRegion(region.id)
+                  .slice(0, 4)
+                  .map((entry) => (
+                    <li>{entry.title}</li>
+                  ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="areas__cta reveal">
+        <Button href="/conditions-treatments" variant="secondary">
+          View all conditions &amp; treatments
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== INSURANCE ==================== -->
+  <section class="section section--tight section--tint section--rule" id="insurance" aria-labelledby="insurance-heading">
+    <div class="container">
+      <div class="insurance reveal">
+        <div class="insurance__copy">
+          <span class="eyebrow">{insurance.eyebrow}</span>
+          <h2 id="insurance-heading">{insurance.headline}</h2>
+          <p class="insurance__intro">{insurance.intro}</p>
+          <div class="btn-row insurance__buttons">
+            <Button href={`tel:${practice.phoneHref}`}>
+              {insurance.ctaLabel} — {practice.phone}
+            </Button>
+            <Button href="/patient-resources#insurance" variant="secondary">
+              Insurance details
+            </Button>
+          </div>
+        </div>
+
+        <div class="insurance__plans">
+          <h3 class="insurance__plans-title">Accepted plans include</h3>
+          <ul class="insurance__list">
+            {insurance.plans.map((plan) => <li>{plan}</li>)}
+          </ul>
+          <p class="fine insurance__disclaimer">{insurance.disclaimer}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== LOCATIONS ==================== -->
+  <section class="section section--tight" aria-labelledby="locations-heading">
+    <div class="container">
+      <div class="locations reveal">
+        <div class="locations__header">
+          <span class="eyebrow">Locations</span>
+          <h2 id="locations-heading">Seeing patients across the East Bay</h2>
+        </div>
+
+        <div class="locations__grid">
+          <div class="locations__item">
+            <h3>{pinole.name}</h3>
+            <address>
+              {pinole.street}<br />
+              {cityLine(pinole)}
+            </address>
+            <a class="link-arrow" href="/contact">Directions &amp; details</a>
+          </div>
+
+          <div class="locations__item">
+            <h3>Vallejo</h3>
+            <address>
+              Vallejo, California<br />
+              <span class="muted">By Appointment</span>
+            </address>
+            <p class="fine">{vallejo.note}</p>
+          </div>
+
+          <div class="locations__item">
+            <h3>Contact</h3>
+            <address>
+              <a href={`tel:${practice.phoneHref}`}>{practice.phone}</a><br />
+              <a href={`mailto:${practice.email}`}>{practice.email}</a>
+            </address>
+            <a class="link-arrow" href="/contact#request-an-appointment">Request an appointment</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CTA ==================== -->
+  <CtaSection />
+</BaseLayout>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero {
+    padding-block: clamp(3rem, 2rem + 5vw, 6.5rem) clamp(3.5rem, 2.5rem + 5vw, 7rem);
+    background:
+      radial-gradient(80% 120% at 88% 8%, rgba(51, 86, 107, 0.07) 0%, transparent 58%),
+      var(--bg);
+  }
+
+  .hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
+    align-items: center;
+  }
+
+  .hero__headline {
+    font-size: var(--step-display);
+    line-height: 1.07;
+    letter-spacing: -0.03em;
+    /* Wide enough for one sentence per line on desktop */
+    max-width: 19ch;
+  }
+
+  .hero__subhead {
+    margin-top: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    font-size: var(--step-lead);
+    line-height: 1.6;
+    color: var(--ink-3);
+    max-width: 34rem;
+  }
+
+  .hero__buttons {
+    margin-top: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+  }
+
+  .hero__media {
+    position: relative;
+  }
+
+  /* A thin accent rule anchoring the image, purely decorative */
+  .hero__media::before {
+    content: '';
+    position: absolute;
+    left: -1.25rem;
+    top: 2.5rem;
+    bottom: 2.5rem;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--accent-tint-2), transparent);
+  }
+
+  @media (max-width: 62rem) {
+    .hero__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .hero__headline {
+      max-width: 16ch;
+    }
+
+    .hero__media::before {
+      display: none;
+    }
+  }
+
+  /* ---------- About ---------- */
+  .about__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+    align-items: start;
+  }
+
+  .about__credentials {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .about__credentials li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .about__credential-value {
+    font-size: 1.375rem;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .about__credential-label {
+    font-size: var(--step-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .about__headline {
+    font-size: var(--step-h2);
+    text-transform: lowercase;
+  }
+
+  .about__body {
+    margin-top: 1.75rem;
+    display: grid;
+    gap: 1.25rem;
+    max-width: 38rem;
+  }
+
+  .about__body p {
+    font-size: 1.09375rem;
+    line-height: 1.72;
+  }
+
+  .about__body p:first-child {
+    font-size: var(--step-lead);
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .about__link {
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 62rem) {
+    .about__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .about__media {
+      max-width: 26rem;
+    }
+  }
+
+  /* ---------- Continuity ---------- */
+  .continuity {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+    align-items: start;
+  }
+
+  .continuity__body {
+    margin-top: 1.25rem;
+    color: var(--ink-2);
+  }
+
+  .continuity__points {
+    display: grid;
+    gap: 0;
+  }
+
+  .continuity__point {
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .continuity__point:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .continuity__num {
+    display: block;
+    font-size: var(--step-xs);
+    font-weight: 650;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .continuity__point-title {
+    font-size: var(--step-h3);
+  }
+
+  .continuity__point-body {
+    margin-top: 0.5rem;
+    font-size: var(--step-small);
+    line-height: 1.65;
+    color: var(--ink-3);
+    max-width: 34rem;
+  }
+
+  @media (max-width: 62rem) {
+    .continuity {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---------- Areas of care ---------- */
+  /* Four regions read best as an even 2 × 2 rather than a 3 + 1 orphan */
+  .areas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 50rem) {
+    .areas {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .area {
+    padding: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  }
+
+  .area:hover {
+    border-color: var(--accent-tint-2);
+    box-shadow: var(--shadow);
+  }
+
+  .area__title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .area__title a:hover {
+    color: var(--accent-deep);
+  }
+
+  .area__blurb {
+    margin-top: 0.65rem;
+    font-size: var(--step-small);
+    line-height: 1.6;
+    color: var(--ink-3);
+  }
+
+  .area__list {
+    margin-top: 1.15rem;
+    padding-top: 1.15rem;
+    border-top: 1px solid var(--line-soft);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.5rem;
+  }
+
+  .area__list li {
+    padding: 0.3rem 0.7rem;
+    background: var(--bg-tint);
+    border-radius: var(--radius-pill);
+    font-size: var(--step-xs);
+    color: var(--ink-2);
+  }
+
+  .areas__cta {
+    margin-top: 2.5rem;
+  }
+
+  /* ---------- Insurance ---------- */
+  .insurance {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(2rem, 1.4rem + 3vw, 4rem);
+    align-items: start;
+  }
+
+  .insurance__intro {
+    margin-top: 1.15rem;
+    font-size: var(--step-lead);
+    line-height: 1.62;
+    color: var(--ink-3);
+    max-width: 32rem;
+  }
+
+  .insurance__buttons {
+    margin-top: 2rem;
+  }
+
+  .insurance__plans {
+    padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
+
+  .insurance__plans-title {
+    font-size: var(--step-xs);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .insurance__list {
+    margin-top: 1.15rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+    gap: 0.1rem 1.5rem;
+  }
+
+  .insurance__list li {
+    padding-block: 0.55rem;
+    border-top: 1px solid var(--line-soft);
+    font-size: var(--step-small);
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .insurance__disclaimer {
+    margin-top: 1.35rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (max-width: 62rem) {
+    .insurance {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---------- Locations ---------- */
+  .locations__header {
+    margin-bottom: 2.5rem;
+  }
+
+  .locations__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+  }
+
+  .locations__item {
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--ink);
+  }
+
+  .locations__item h3 {
+    font-size: var(--step-h4);
+  }
+
+  .locations__item address {
+    margin-top: 0.75rem;
+    font-style: normal;
+    line-height: 1.65;
+    color: var(--ink-2);
+  }
+
+  .locations__item address a {
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .locations__item address a:hover {
+    color: var(--accent-deep);
+    border-bottom-color: var(--accent);
+  }
+
+  .locations__item .link-arrow,
+  .locations__item .fine {
+    margin-top: 1rem;
+  }
+
+  .locations__item .link-arrow {
+    display: inline-flex;
+  }
+</style>

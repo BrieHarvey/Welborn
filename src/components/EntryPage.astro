@@ -1,0 +1,337 @@
+---
+/**
+ * EntryPage — the shared template behind every /conditions/* and /treatments/*
+ * page. Content comes entirely from src/data/conditions.js.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CtaSection from './CtaSection.astro';
+import Button from './Button.astro';
+import { entriesByRegion, pathFor, regionById } from '../data/conditions.js';
+import { practice, legal } from '../data/site.js';
+
+interface Props {
+  entry: any;
+}
+
+const { entry } = Astro.props;
+
+const region = regionById(entry.region);
+const url = pathFor(entry);
+const related = entriesByRegion(entry.region).filter((e: any) => e.slug !== entry.slug);
+const isTreatment = entry.type === 'treatment';
+
+const siteOrigin = Astro.site?.origin ?? 'https://welbornortho.com';
+
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteOrigin },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Conditions & Treatments',
+      item: `${siteOrigin}/conditions-treatments`,
+    },
+    { '@type': 'ListItem', position: 3, name: entry.title, item: `${siteOrigin}${url}` },
+  ],
+};
+
+const medicalPage = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalWebPage',
+  name: entry.title,
+  description: entry.metaDescription,
+  url: `${siteOrigin}${url}`,
+  audience: { '@type': 'Patient' },
+  about: {
+    '@type': isTreatment ? 'MedicalProcedure' : 'MedicalCondition',
+    name: entry.title,
+    description: entry.intro,
+  },
+  provider: { '@id': `${siteOrigin}/#practice` },
+};
+---
+
+<BaseLayout
+  title={`${entry.metaTitle} | Welborn Orthopedics`}
+  description={entry.metaDescription}
+  canonical={url}
+  schema={[breadcrumbs, medicalPage]}
+  ogType="article"
+>
+  <div class="entry">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <ol class="crumbs__list">
+          <li><a href="/">Home</a></li>
+          <li><a href="/conditions-treatments">Conditions &amp; Treatments</a></li>
+          {
+            region && (
+              <li>
+                <a href={`/conditions-treatments#${region.id}`}>{region.name}</a>
+              </li>
+            )
+          }
+          <li aria-current="page">{entry.title}</li>
+        </ol>
+      </nav>
+
+      <div class="entry__layout">
+        <!-- ==================== ARTICLE ==================== -->
+        <article class="entry__main">
+          <header class="entry__header">
+            <span class="eyebrow">{isTreatment ? 'Procedure' : 'Condition'}</span>
+            <h1 class="entry__title">{entry.title}</h1>
+            <p class="entry__intro">{entry.intro}</p>
+          </header>
+
+          {
+            entry.sections.map((section: any) => (
+              <section class="entry__section reveal">
+                <h2 class="entry__section-title">{section.heading}</h2>
+                {section.body && <p class="entry__body">{section.body}</p>}
+                {section.items && (
+                  <ul class="list-check entry__list">
+                    {section.items.map((item: string) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                )}
+                {section.links && (
+                  <p class="entry__links">
+                    {section.links.map((link: any) => (
+                      <a class="link-arrow" href={link.href}>
+                        {link.label}
+                      </a>
+                    ))}
+                  </p>
+                )}
+              </section>
+            ))
+          }
+
+          <aside class="entry__disclaimer" aria-label="Medical disclaimer">
+            <p>{legal.disclaimer}</p>
+          </aside>
+        </article>
+
+        <!-- ==================== SIDEBAR ==================== -->
+        <aside class="entry__side" aria-label="Next steps and related pages">
+          <div class="side-card">
+            <h2 class="side-card__title">Discuss this with Dr. Welborn</h2>
+            <p class="side-card__body">
+              An evaluation starts with a conversation and an examination. You will leave
+              understanding what is going on and what the options are.
+            </p>
+            <div class="side-card__actions">
+              <Button href="/contact#request-an-appointment" wide>Request an Appointment</Button>
+              <Button href={`tel:${practice.phoneHref}`} variant="secondary" wide>
+                Call {practice.phone}
+              </Button>
+            </div>
+          </div>
+
+          {
+            related.length > 0 && region && (
+              <nav class="side-related" aria-labelledby="related-heading">
+                <h2 class="side-related__title" id="related-heading">
+                  More in {region.name}
+                </h2>
+                <ul class="side-related__list">
+                  {related.map((item: any) => (
+                    <li>
+                      <a href={pathFor(item)}>{item.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )
+          }
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <CtaSection />
+</BaseLayout>
+
+<style>
+  .entry {
+    padding-block: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem) clamp(3.5rem, 2.5rem + 4vw, 6rem);
+  }
+
+  /* ---------- Breadcrumb ---------- */
+  .crumbs {
+    margin-bottom: clamp(1.75rem, 1.4rem + 1.5vw, 3rem);
+  }
+
+  .crumbs__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.55rem;
+    font-size: var(--step-xs);
+    color: var(--ink-3);
+  }
+
+  .crumbs__list li:not(:last-child)::after {
+    content: '/';
+    margin-left: 0.55rem;
+    color: var(--line);
+  }
+
+  .crumbs__list a {
+    color: var(--ink-3);
+    text-decoration: none;
+  }
+
+  .crumbs__list a:hover {
+    color: var(--accent-deep);
+    text-decoration: underline;
+  }
+
+  .crumbs__list li[aria-current='page'] {
+    color: var(--ink);
+    font-weight: 550;
+  }
+
+  /* ---------- Layout ---------- */
+  .entry__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+    align-items: start;
+  }
+
+  .entry__main {
+    max-width: 42rem;
+  }
+
+  .entry__title {
+    font-size: var(--step-h1);
+    letter-spacing: -0.028em;
+  }
+
+  .entry__intro {
+    margin-top: 1.25rem;
+    font-size: var(--step-lead);
+    line-height: 1.62;
+    color: var(--ink-2);
+  }
+
+  .entry__header {
+    padding-bottom: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .entry__section {
+    margin-top: clamp(2rem, 1.6rem + 1.6vw, 3rem);
+  }
+
+  .entry__section-title {
+    font-size: var(--step-h3);
+  }
+
+  .entry__body {
+    margin-top: 0.9rem;
+    line-height: 1.75;
+  }
+
+  .entry__list {
+    margin-top: 1.1rem;
+  }
+
+  .entry__list li {
+    line-height: 1.65;
+  }
+
+  .entry__links {
+    margin-top: 1rem;
+  }
+
+  .entry__disclaimer {
+    margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .entry__disclaimer p {
+    font-size: var(--step-xs);
+    line-height: 1.65;
+    color: var(--ink-3);
+  }
+
+  /* ---------- Sidebar ---------- */
+  .entry__side {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .side-card {
+    padding: 1.75rem;
+    background: var(--accent-tint);
+    border: 1px solid var(--accent-tint-2);
+    border-radius: var(--radius-lg);
+  }
+
+  .side-card__title {
+    font-size: var(--step-h4);
+    letter-spacing: -0.006em;
+  }
+
+  .side-card__body {
+    margin-top: 0.65rem;
+    font-size: var(--step-small);
+    line-height: 1.65;
+    color: var(--ink-2);
+  }
+
+  .side-card__actions {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 1.35rem;
+  }
+
+  .side-related__title {
+    font-size: var(--step-xs);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .side-related__list li {
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .side-related__list a {
+    display: block;
+    padding-block: 0.7rem;
+    font-size: var(--step-small);
+    color: var(--ink-2);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease), padding-left var(--dur) var(--ease);
+  }
+
+  .side-related__list a:hover {
+    color: var(--accent-deep);
+    padding-left: 0.35rem;
+  }
+
+  @media (max-width: 62rem) {
+    .entry__layout {
+      grid-template-columns: 1fr;
+    }
+
+    .entry__side {
+      position: static;
+      max-width: 34rem;
+    }
+  }
+</style>

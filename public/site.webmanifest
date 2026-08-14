@@ -1,0 +1,22 @@
+{
+  "name": "Welborn Orthopedics",
+  "short_name": "Welborn Ortho",
+  "description": "Orthopaedic surgery practice of John Hearst Welborn, MD in Pinole, California.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fbfaf8",
+  "theme_color": "#33566b",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

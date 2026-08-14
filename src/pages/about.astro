@@ -1,0 +1,359 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Figure from '../components/Figure.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import CtaSection from '../components/CtaSection.astro';
+import Button from '../components/Button.astro';
+import { about } from '../data/content.js';
+import { approach, background, hasBackground } from '../data/about.js';
+import { regions, entriesByRegion, pathFor } from '../data/conditions.js';
+import { practice } from '../data/site.js';
+
+const siteOrigin = Astro.site?.origin ?? 'https://welbornortho.com';
+
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteOrigin },
+    { '@type': 'ListItem', position: 2, name: 'About Dr. Welborn', item: `${siteOrigin}/about` },
+  ],
+};
+---
+
+<BaseLayout
+  title="About Dr. J. Hearst Welborn, MD | Orthopaedic Surgeon, Pinole CA"
+  description="Meet J. Hearst Welborn, MD — a private practice orthopaedic surgeon in Pinole, California with more than 30 years of experience treating hand, shoulder, knee and hip conditions."
+  canonical="/about"
+  schema={[breadcrumbs]}
+>
+  <!-- ==================== INTRO ==================== -->
+  <section class="page-hero" aria-labelledby="about-title">
+    <div class="container page-hero__inner">
+      <div class="page-hero__copy">
+        <span class="eyebrow">About</span>
+        <h1 id="about-title">{practice.doctor.shortName}, MD</h1>
+        <p class="page-hero__lead">
+          A private practice orthopaedic surgeon serving Pinole, Vallejo and the East Bay — where
+          patients are cared for by the same physician from first appointment through recovery.
+        </p>
+        <div class="btn-row page-hero__buttons">
+          <Button href="/contact#request-an-appointment">Request an Appointment</Button>
+          <Button href={`tel:${practice.phoneHref}`} variant="secondary">
+            Call {practice.phone}
+          </Button>
+        </div>
+      </div>
+
+      <div class="page-hero__media">
+        <Figure
+          alt={about.imageAlt}
+          label="Portrait of Dr. Welborn. Editorial, natural light, portrait orientation, approximately 1200 × 1500."
+          variant="portrait"
+          ratio="4 / 5"
+          eager
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== BIOGRAPHY ==================== -->
+  <section class="section section--surface section--rule" aria-labelledby="bio-heading">
+    <div class="container">
+      <div class="bio reveal">
+        <div class="bio__label">
+          <h2 class="bio__heading" id="bio-heading">{about.headline}</h2>
+        </div>
+        <div class="bio__body">
+          {about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== APPROACH ==================== -->
+  <section class="section" aria-labelledby="approach-heading">
+    <div class="container">
+      <SectionHeader
+        eyebrow={approach.eyebrow}
+        title={approach.headline}
+        intro={approach.intro}
+        id="approach-heading"
+        class="reveal"
+      />
+
+      <div class="grid grid--2 approach">
+        {
+          approach.points.map((point, index) => (
+            <article class="approach__item reveal" style={`--reveal-delay: ${(index % 2) * 80}ms`}>
+              <h3 class="approach__title">{point.title}</h3>
+              <p class="approach__body">{point.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CREDENTIALS (only when supplied) ==================== -->
+  {
+    hasBackground && (
+      <section class="section section--tint section--rule" aria-labelledby="background-heading">
+        <div class="container">
+          <SectionHeader
+            eyebrow={background.eyebrow}
+            title={background.headline}
+            intro={background.intro || undefined}
+            id="background-heading"
+            class="reveal"
+          />
+          <div class="grid grid--2">
+            {background.groups
+              .filter((group) => group.items.length > 0)
+              .map((group) => (
+                <div class="panel reveal">
+                  <h3 class="bg__heading">{group.heading}</h3>
+                  <dl class="bg__list">
+                    {group.items.map((item) => (
+                      <div class="bg__row">
+                        <dt>{item.label}</dt>
+                        <dd>{item.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ==================== WHAT HE TREATS ==================== -->
+  <section
+    class:list={['section', !hasBackground && 'section--tint section--rule']}
+    aria-labelledby="treats-heading"
+  >
+    <div class="container">
+      <SectionHeader
+        eyebrow="Scope of practice"
+        title="Conditions Dr. Welborn treats"
+        intro="A broad general orthopaedic practice, with particular attention to the hand and wrist, the shoulder, and the large weight-bearing joints."
+        id="treats-heading"
+        class="reveal"
+      />
+
+      <div class="treats">
+        {
+          regions.map((region, index) => (
+            <div class="treats__group reveal" style={`--reveal-delay: ${(index % 2) * 70}ms`}>
+              <h3 class="treats__region">
+                <a href={`/conditions-treatments#${region.id}`}>{region.name}</a>
+              </h3>
+              <ul class="treats__list">
+                {entriesByRegion(region.id).map((entry) => (
+                  <li>
+                    <a href={pathFor(entry)}>{entry.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CtaSection />
+</BaseLayout>
+
+<style>
+  /* ---------- Page hero (shared pattern) ---------- */
+  .page-hero {
+    padding-block: clamp(2.75rem, 2rem + 4vw, 5.5rem) clamp(3rem, 2.2rem + 4vw, 5.5rem);
+    background:
+      radial-gradient(80% 120% at 88% 6%, rgba(51, 86, 107, 0.07) 0%, transparent 58%),
+      var(--bg);
+  }
+
+  .page-hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+    align-items: center;
+  }
+
+  .page-hero h1 {
+    font-size: var(--step-h1);
+    letter-spacing: -0.028em;
+  }
+
+  .page-hero__lead {
+    margin-top: 1.25rem;
+    font-size: var(--step-lead);
+    line-height: 1.6;
+    color: var(--ink-3);
+    max-width: 34rem;
+  }
+
+  .page-hero__buttons {
+    margin-top: 2rem;
+  }
+
+  .page-hero__media {
+    max-width: 30rem;
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  @media (max-width: 62rem) {
+    .page-hero__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .page-hero__media {
+      max-width: 24rem;
+      margin-inline: 0;
+    }
+  }
+
+  /* ---------- Biography ---------- */
+  .bio {
+    display: grid;
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    gap: clamp(2rem, 1.4rem + 3vw, 4.5rem);
+    align-items: start;
+  }
+
+  .bio__heading {
+    font-size: var(--step-h2);
+    text-transform: lowercase;
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+
+  .bio__body {
+    display: grid;
+    gap: 1.35rem;
+    max-width: 40rem;
+  }
+
+  .bio__body p {
+    font-size: 1.09375rem;
+    line-height: 1.75;
+  }
+
+  .bio__body p:first-child {
+    font-size: var(--step-lead);
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  @media (max-width: 62rem) {
+    .bio {
+      grid-template-columns: 1fr;
+    }
+
+    .bio__heading {
+      position: static;
+    }
+  }
+
+  /* ---------- Approach ---------- */
+  /* Four points read best as an even 2 × 2 rather than a 3 + 1 orphan */
+  .approach {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(1.5rem, 1rem + 2.5vw, 4rem);
+  }
+
+  @media (max-width: 50rem) {
+    .approach {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .approach__item {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .approach__title {
+    font-size: var(--step-h3);
+  }
+
+  .approach__body {
+    margin-top: 0.65rem;
+    line-height: 1.7;
+    color: var(--ink-3);
+    max-width: 34rem;
+  }
+
+  /* ---------- Credentials ---------- */
+  .bg__heading {
+    font-size: var(--step-h4);
+    margin-bottom: 1rem;
+  }
+
+  .bg__row {
+    display: grid;
+    gap: 0.15rem;
+    padding-block: 0.75rem;
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .bg__row dt {
+    font-size: var(--step-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .bg__row dd {
+    margin: 0;
+    color: var(--ink);
+  }
+
+  /* ---------- Treats ---------- */
+  .treats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: clamp(1.75rem, 1.2rem + 2.5vw, 3rem);
+  }
+
+  .treats__region {
+    font-size: var(--step-h4);
+    padding-bottom: 0.9rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .treats__region a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .treats__region a:hover {
+    color: var(--accent-deep);
+  }
+
+  .treats__list {
+    margin-top: 0.5rem;
+  }
+
+  .treats__list li {
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .treats__list a {
+    display: block;
+    padding-block: 0.7rem;
+    font-size: var(--step-small);
+    color: var(--ink-2);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease), padding-left var(--dur) var(--ease);
+  }
+
+  .treats__list a:hover {
+    color: var(--accent-deep);
+    padding-left: 0.35rem;
+  }
+</style>
