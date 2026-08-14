@@ -6,6 +6,37 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
+   0. TYPEFACE
+   --------------------------------------------------------------------------
+   Schibsted Grotesk, self-hosted from public/fonts/ — one variable file
+   covering every weight the site uses, so there is a single font request and
+   no third-party connection. Licensed under the SIL Open Font License 1.1
+   (see public/fonts/schibsted-grotesk-OFL.txt).
+
+   The second face is a metrics-matched stand-in built from a local system
+   font. Its numbers were measured against Schibsted Grotesk so that text
+   occupies the same space before the real font arrives — the page does not
+   reflow as it loads.
+   -------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'Schibsted Grotesk';
+  src: url('/fonts/schibsted-grotesk-variable.woff2') format('woff2-variations');
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Schibsted Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica'), local('Liberation Sans');
+  size-adjust: 91.06%;
+  ascent-override: 97.74%;
+  descent-override: 24.16%;
+  line-gap-override: 0%;
+}
+
+/* --------------------------------------------------------------------------
    1. TOKENS
    -------------------------------------------------------------------------- */
 
@@ -78,8 +109,8 @@
   /* Layout */
   --header-h: 74px;
 
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Text', 'Segoe UI',
-    Roboto, 'Helvetica Neue', 'Noto Sans', Arial, sans-serif;
+  --font-sans: 'Schibsted Grotesk', 'Schibsted Fallback', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 @media (max-width: 899px) {

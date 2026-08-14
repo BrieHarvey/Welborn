@@ -224,6 +224,27 @@ The entry turns into a download link automatically.
 
 ---
 
+## Typeface
+
+The site is set in **Schibsted Grotesk**, served from `public/fonts/` rather
+than from Google Fonts — so there is no third-party request, nothing to break if
+an outside service changes, and no visitor data sent elsewhere. A single
+variable font file covers every weight used on the site.
+
+It is licensed under the [SIL Open Font License 1.1](https://openfontlicense.org),
+which permits this use; the licence text ships alongside the font at
+`public/fonts/schibsted-grotesk-OFL.txt` and must stay there.
+
+To change the typeface, replace the `.woff2` file and update the `@font-face`
+block at the top of `src/styles/global.css` along with the `--font-sans` token.
+The second `@font-face` in that file is a metrics-matched stand-in built from a
+system font: its numbers were measured against Schibsted Grotesk so that text
+occupies exactly the same space before the real font loads, which keeps the page
+from reflowing. If you swap the typeface, those numbers need re-measuring or the
+block should simply be removed.
+
+---
+
 ## Changing the domain
 
 The site URL appears in one place: the `SITE_URL` constant at the top of
@@ -263,10 +284,12 @@ form fields with inline error messages, keyboard-operable navigation, colour
 contrast that meets WCAG 2.1 AA, and full respect for the operating system's
 "reduce motion" setting.
 
-**Performance.** No web fonts, no icon library, no CSS framework, no analytics.
-The only JavaScript is the mobile menu, the scroll reveal, the map loader and
-the form — a few kilobytes in total. Images are lazily loaded and the map on the
-contact page is not requested from Google until a visitor asks for it.
+**Performance.** No icon library, no CSS framework, no analytics, and nothing
+loaded from a third-party domain. One self-hosted font file (47 KB, preloaded)
+covers every weight on the site. The only JavaScript is the mobile menu, the
+scroll reveal, the map loader and the form — a few kilobytes in total. Images
+are lazily loaded, and the map on the contact page is not requested from Google
+until a visitor asks for it.
 
 ---
 
@@ -301,6 +324,8 @@ a placeholder pretending to be a credential.
 │   ├── og-image.png           Social sharing card
 │   ├── robots.txt             Search engine instructions
 │   ├── _headers               Security and caching headers
+│   ├── _redirects             Short URLs (/insurance, /faq, /appointment)
+│   ├── fonts/                 Self-hosted typeface and its licence
 │   ├── forms/                 New patient PDFs go here
 │   └── images/                Photographs go here
 ├── scripts/                   Sources for the generated images

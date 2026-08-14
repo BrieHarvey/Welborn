@@ -7,6 +7,13 @@
   <head>
     <meta charset="utf-8" />
     <style>
+      @font-face {
+        font-family: 'Schibsted Grotesk';
+        src: url('../public/fonts/schibsted-grotesk-variable.woff2') format('woff2-variations');
+        font-weight: 400 900;
+        font-display: block;
+      }
+
       * { margin: 0; padding: 0; box-sizing: border-box; }
 
       html, body { width: 1200px; height: 630px; }
@@ -15,7 +22,7 @@
         background:
           radial-gradient(90% 120% at 85% 0%, rgba(51, 86, 107, 0.62) 0%, transparent 62%),
           #1a2f3b;
-        font-family: "Liberation Sans", Helvetica, Arial, sans-serif;
+        font-family: 'Schibsted Grotesk', 'Liberation Sans', Helvetica, Arial, sans-serif;
         color: #fff;
       }
 
@@ -64,7 +71,7 @@
         font-weight: 700;
         line-height: 1.1;
         letter-spacing: -0.03em;
-        max-width: 19ch;
+        max-width: 18ch;
       }
 
       .bottom {

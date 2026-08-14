@@ -1,0 +1,6 @@
+# Cloudflare Pages redirects
+# The practice refers to this section as "Insurance" — send that URL to it.
+/insurance   /patient-resources#insurance   301
+/forms       /patient-resources#new-patient-forms   301
+/faq         /patient-resources#faq   301
+/appointment /contact#request-an-appointment   301
