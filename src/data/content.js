@@ -47,7 +47,10 @@ export const about = {
     'Patients often come to an orthopaedic surgeon at a difficult moment—after an injury, while living with pain, or when facing an important decision about surgery. The road to recovery can be challenging, and having the right surgeon by your side can make a meaningful difference.',
     'Dr. Welborn believes exceptional care begins with time and communication. He emphasizes meaningful face-to-face interaction before and after surgery, giving patients the opportunity to ask questions, understand their treatment options, and feel supported throughout their treatment and recovery.',
   ],
-  link: { label: 'More about Dr. Welborn', href: '/about' },
+  // The link shown at the end of the homepage about section. The hero already
+  // offers "About Dr. Welborn", so this one carries the reader forward into the
+  // conditions he treats. To point it somewhere else, change both lines.
+  link: { label: 'See the conditions Dr. Welborn treats', href: '/conditions-treatments' },
   imageAlt: 'Portrait of Dr. J. Hearst Welborn, MD, orthopaedic surgeon',
 };
 

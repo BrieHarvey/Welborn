@@ -1,0 +1,49 @@
+---
+/**
+ * HeroArt — the light brand artwork used on interior page headers.
+ *
+ * Purely decorative: it fills the space beside a text-only page heading so the
+ * page does not open on a bare column of type. Hidden from assistive
+ * technology, and dropped entirely on narrow screens where the copy uses the
+ * full width.
+ *
+ * Place it as a direct child of a `position: relative` header section.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class:list={['hero-art', className]} aria-hidden="true">
+  <img src="/images/art-arcs-light.svg" alt="" width="900" height="700" loading="lazy" />
+</div>
+
+<style>
+  .hero-art {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(52%, 46rem);
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
+  }
+
+  .hero-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: right center;
+  }
+
+  /* Below this width the heading and lead use the full column, so the artwork
+     would sit behind the text rather than beside it. */
+  @media (max-width: 62rem) {
+    .hero-art {
+      display: none;
+    }
+  }
+</style>

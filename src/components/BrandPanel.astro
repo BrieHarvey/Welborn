@@ -1,0 +1,132 @@
+---
+/**
+ * BrandPanel — the practice's own artwork used in place of a photograph.
+ *
+ * Rather than an empty grey box, an image slot with no photograph yet shows a
+ * composed brand panel: the practice artwork, the mark, and a short nameplate.
+ * It is designed to look deliberate on its own, so the site can go live before
+ * the photography is shot, and it is replaced simply by giving the surrounding
+ * <Figure> a real `src`.
+ *
+ * See README → "Swapping in photography".
+ */
+import Logo from './Logo.astro';
+
+interface Props {
+  art?: 'wide' | 'portrait';
+  ratio?: string;
+  kicker?: string;
+  title?: string;
+  sub?: string;
+  eager?: boolean;
+  class?: string;
+}
+
+const {
+  art = 'wide',
+  ratio = '4 / 3',
+  kicker = '',
+  title = '',
+  sub = '',
+  eager = false,
+  class: className = '',
+} = Astro.props;
+
+const source = art === 'portrait' ? '/images/art-arcs-portrait.svg' : '/images/art-arcs-wide.svg';
+const dimensions = art === 'portrait' ? { w: 1000, h: 1250 } : { w: 1200, h: 800 };
+---
+
+<div class:list={['bpanel', `bpanel--${art}`, className]} style={`aspect-ratio: ${ratio};`}>
+  <img
+    class="bpanel__art"
+    src={source}
+    alt=""
+    width={dimensions.w}
+    height={dimensions.h}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding={eager ? 'sync' : 'async'}
+    fetchpriority={eager ? 'high' : 'auto'}
+  />
+
+  <div class="bpanel__inner">
+    <Logo variant="mark" tone="invert" size={art === 'portrait' ? 60 : 52} />
+
+    {
+      (kicker || title || sub) && (
+        <div class="bpanel__plate">
+          {kicker && <p class="bpanel__kicker">{kicker}</p>}
+          {title && <p class="bpanel__title">{title}</p>}
+          {sub && <p class="bpanel__sub">{sub}</p>}
+        </div>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .bpanel {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--accent-dark);
+    isolation: isolate;
+  }
+
+  .bpanel__art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+  }
+
+  .bpanel__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    width: 100%;
+    padding: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
+  }
+
+  .bpanel__plate {
+    max-width: 24rem;
+  }
+
+  .bpanel__kicker {
+    font-size: var(--step-xs);
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .bpanel__title {
+    margin-top: 0.55rem;
+    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.4rem);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+    color: #fff;
+  }
+
+  .bpanel__sub {
+    margin-top: 0.4rem;
+    font-size: var(--step-small);
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  /* A hairline drawn inside the panel edge — the same detail used on the
+     dark call-to-action band, so the two read as one family. */
+  .bpanel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+  }
+</style>

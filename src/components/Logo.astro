@@ -1,0 +1,129 @@
+---
+/**
+ * Logo — the Welborn Orthopedics mark.
+ *
+ * The mark is a "W" drawn as one continuous stroke whose final upstroke carries
+ * higher than the rest: the practice initial, and an upward line — movement
+ * restored. Mitred joints keep it precise rather than decorative, and it stays
+ * legible down to a 16px favicon.
+ *
+ * variant  'lockup'  mark + practice name + specialty  (site header, brand panels)
+ *          'mark'    the badge on its own               (favicons, small spaces)
+ * tone     'brand'   white mark on the practice blue    (default)
+ *          'invert'  white mark on a transparent badge  (dark backgrounds)
+ *          'ink'     mark drawn in the current text colour, no badge
+ */
+interface Props {
+  variant?: 'lockup' | 'mark';
+  tone?: 'brand' | 'invert' | 'ink';
+  size?: number;
+  /** Line shown under the practice name. Pass '' to hide it. */
+  sub?: string;
+  class?: string;
+}
+
+const {
+  variant = 'lockup',
+  tone = 'brand',
+  size = 38,
+  sub = 'Orthopaedic Surgery',
+  class: className = '',
+} = Astro.props;
+
+// The single source of truth for the mark's geometry. If this changes, update
+// public/favicon.svg, scripts/apple-touch-icon.html and scripts/og-image.html
+// to match.
+const W = 'M13 25 L22 44 L31.5 21 L41 44 L52 15';
+---
+
+<span class:list={['logo', `logo--${variant}`, `logo--${tone}`, className]}>
+  <svg
+    class="logo__mark"
+    viewBox="0 0 64 64"
+    width={size}
+    height={size}
+    aria-hidden="true"
+    focusable="false"
+  >
+    {tone !== 'ink' && <rect class="logo__badge" x="0" y="0" width="64" height="64" rx="15" />}
+    <path
+      class="logo__stroke"
+      d={W}
+      fill="none"
+      stroke-width="5"
+      stroke-linecap="round"
+      stroke-linejoin="miter"
+      stroke-miterlimit="6"
+    />
+  </svg>
+
+  {
+    variant === 'lockup' && (
+      <span class="logo__text">
+        <span class="logo__name">Welborn Orthopedics</span>
+        {sub && <span class="logo__sub">{sub}</span>}
+      </span>
+    )
+  }
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-width: 0;
+  }
+
+  .logo__mark {
+    flex: none;
+    display: block;
+  }
+
+  /* ---- brand: white mark on the practice blue ---- */
+  .logo--brand .logo__badge {
+    fill: var(--accent-dark);
+  }
+  .logo--brand .logo__stroke {
+    stroke: #fff;
+  }
+
+  /* ---- invert: white mark, translucent badge, for dark artwork ---- */
+  .logo--invert .logo__badge {
+    fill: rgba(255, 255, 255, 0.08);
+    stroke: rgba(255, 255, 255, 0.3);
+    stroke-width: 1;
+  }
+  .logo--invert .logo__stroke {
+    stroke: #fff;
+  }
+
+  /* ---- ink: no badge, follows the surrounding text colour ---- */
+  .logo--ink .logo__stroke {
+    stroke: currentColor;
+  }
+
+  .logo__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.15;
+  }
+
+  .logo__name {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.014em;
+    white-space: nowrap;
+  }
+
+  .logo__sub {
+    margin-top: 0.2rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    opacity: 0.62;
+    white-space: nowrap;
+  }
+</style>

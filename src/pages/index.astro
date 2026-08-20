@@ -8,15 +8,14 @@ import SectionHeader from '../components/SectionHeader.astro';
 import { hero, about, continuity } from '../data/content.js';
 import { regions, entriesByRegion } from '../data/conditions.js';
 import { insurance } from '../data/patient-resources.js';
-import { practice, locations, cityLine } from '../data/site.js';
+import { practice, locations, officeHours, cityLine } from '../data/site.js';
 
 const pinole = locations.find((l) => l.id === 'pinole')!;
-const vallejo = locations.find((l) => l.id === 'vallejo')!;
 ---
 
 <BaseLayout
   title="Welborn Orthopedics | Orthopaedic Surgeon in Pinole & the East Bay"
-  description="J. Hearst Welborn, MD is a board-certified orthopaedic surgeon in Pinole, California, with more than 30 years of experience treating hand, shoulder, knee and hip conditions, fractures and injuries."
+  description="Board-certified orthopaedic surgeon J. Hearst Welborn, MD treats hand, shoulder, knee and hip conditions, fractures and injuries in Pinole, California."
   canonical="/"
 >
   <!-- ==================== HERO ==================== -->
@@ -36,8 +35,13 @@ const vallejo = locations.find((l) => l.id === 'vallejo')!;
       <div class="hero__media">
         <Figure
           alt={hero.imageAlt}
-          label="Hero photograph — a warm, human consultation moment. Landscape, approximately 1600 × 1200."
-          variant="motion"
+          note="Hero photograph — a warm, human consultation moment. Landscape, approximately 1600 × 1200."
+          panel={{
+            art: 'wide',
+            kicker: 'Welborn Orthopedics',
+            title: 'Private practice orthopaedic surgery',
+            sub: `${pinole.street}, ${cityLine(pinole)}`,
+          }}
           ratio="4 / 3"
           eager
         />
@@ -54,8 +58,13 @@ const vallejo = locations.find((l) => l.id === 'vallejo')!;
       <div class="about__media reveal">
         <Figure
           alt={about.imageAlt}
-          label="Portrait of Dr. Welborn. Editorial, natural light, portrait orientation, approximately 1200 × 1500."
-          variant="portrait"
+          note="Portrait of Dr. Welborn. Editorial, natural light, portrait orientation, approximately 1200 × 1500."
+          panel={{
+            art: 'portrait',
+            kicker: practice.doctor.specialty,
+            title: practice.doctor.fullName,
+            sub: 'Pinole, California',
+          }}
           ratio="4 / 5"
         />
         <ul class="about__credentials">
@@ -181,7 +190,7 @@ const vallejo = locations.find((l) => l.id === 'vallejo')!;
     <div class="container">
       <div class="locations reveal">
         <div class="locations__header">
-          <span class="eyebrow">Locations</span>
+          <span class="eyebrow">The office</span>
           <h2 id="locations-heading">Seeing patients across the East Bay</h2>
         </div>
 
@@ -196,21 +205,31 @@ const vallejo = locations.find((l) => l.id === 'vallejo')!;
           </div>
 
           <div class="locations__item">
-            <h3>Vallejo</h3>
-            <address>
-              Vallejo, California<br />
-              <span class="muted">By Appointment</span>
-            </address>
-            <p class="fine">{vallejo.note}</p>
-          </div>
-
-          <div class="locations__item">
             <h3>Contact</h3>
             <address>
               <a href={`tel:${practice.phoneHref}`}>{practice.phone}</a><br />
               <a href={`mailto:${practice.email}`}>{practice.email}</a>
             </address>
             <a class="link-arrow" href="/contact#request-an-appointment">Request an appointment</a>
+          </div>
+
+          <div class="locations__item">
+            <h3>Office hours</h3>
+            {
+              officeHours.verified ? (
+                <address>
+                  {officeHours.days.map((day) => (
+                    <Fragment>
+                      {`${day.label}: ${day.hours || '—'}`}
+                      <br />
+                    </Fragment>
+                  ))}
+                </address>
+              ) : (
+                <p class="locations__note">{officeHours.note}</p>
+              )
+            }
+            <a class="link-arrow" href={`tel:${practice.phoneHref}`}>Call {practice.phone}</a>
           </div>
         </div>
       </div>
@@ -311,7 +330,7 @@ const vallejo = locations.find((l) => l.id === 'vallejo')!;
 
   .about__credential-value {
     font-size: 1.375rem;
-    font-weight: 650;
+    font-weight: 600;
     letter-spacing: -0.02em;
     color: var(--ink);
     line-height: 1.2;
@@ -324,9 +343,10 @@ const vallejo = locations.find((l) => l.id === 'vallejo')!;
     color: var(--ink-3);
   }
 
+  /* The practice supplies this headline already lower-cased; it is set as
+     written rather than transformed, so editing the copy is enough. */
   .about__headline {
     font-size: var(--step-h2);
-    text-transform: lowercase;
   }
 
   .about__body {
@@ -362,11 +382,13 @@ const vallejo = locations.find((l) => l.id === 'vallejo')!;
   }
 
   /* ---------- Continuity ---------- */
+  /* The lead is centred against the taller list of points so the leftover
+     space sits evenly above and below it rather than pooling at the bottom. */
   .continuity {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
     gap: clamp(2.5rem, 1.5rem + 4vw, 5rem);
-    align-items: start;
+    align-items: center;
   }
 
   .continuity__body {
@@ -391,7 +413,7 @@ const vallejo = locations.find((l) => l.id === 'vallejo')!;
   .continuity__num {
     display: block;
     font-size: var(--step-xs);
-    font-weight: 650;
+    font-weight: 600;
     letter-spacing: 0.14em;
     color: var(--accent);
     margin-bottom: 0.5rem;
@@ -546,8 +568,21 @@ const vallejo = locations.find((l) => l.id === 'vallejo')!;
 
   .locations__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+  }
+
+  @media (max-width: 46rem) {
+    .locations__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .locations__note {
+    margin-top: 0.75rem;
+    line-height: 1.65;
+    color: var(--ink-2);
+    max-width: 18rem;
   }
 
   .locations__item {

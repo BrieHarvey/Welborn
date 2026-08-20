@@ -51,24 +51,6 @@ export const locations = [
     mapQuery: '1700 San Pablo Avenue Suite F, Pinole, CA 94564',
     showMap: true,
   },
-  {
-    id: 'vallejo',
-    primary: false,
-    name: 'Vallejo Office',
-    // A full street address for the Vallejo office has not been provided.
-    // Leave `street` empty until a verified address is available.
-    street: '',
-    city: 'Vallejo',
-    state: 'CA',
-    zip: '',
-    phone: practice.phone,
-    phoneHref: practice.phoneHref,
-    fax: practice.fax,
-    email: practice.email,
-    note: 'By appointment. Address details available on request — please call the office.',
-    mapQuery: '',
-    showMap: false,
-  },
 ];
 
 export const primaryLocation = locations.find((l) => l.primary) ?? locations[0];

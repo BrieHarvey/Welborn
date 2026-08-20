@@ -27,6 +27,7 @@ photographs.**
 | Training, certification, hospital affiliations           | `src/data/about.js`                |
 | Privacy policy wording                                   | `src/pages/privacy-policy.astro`   |
 | Colours, fonts, spacing                                  | `src/styles/global.css` (the `:root` block at the top) |
+| The logo mark                                            | `src/components/Logo.astro` (see “Brand and artwork”) |
 
 Each of those files is commented. Change the text between the quotation marks
 and leave the punctuation around it alone.
@@ -145,10 +146,13 @@ emergencies, and directs emergencies to 911.
 
 ## Swapping in photography
 
-Every photograph on the site is currently a clearly-marked placeholder that
-describes the image intended for that slot.
+There are no photographs on the site yet. Rather than leave grey boxes, every
+photography slot currently shows a **brand panel** — the practice artwork, the
+mark, and a short nameplate (see “Brand and artwork” below). Those panels are
+designed to stand on their own, so the site is ready to go live before the
+photography is shot.
 
-To replace one:
+To replace one with a real photograph:
 
 1. Save the photograph into `public/images/` (for example
    `public/images/dr-welborn-portrait.jpg`).
@@ -162,9 +166,13 @@ To replace one:
    />
    ```
 
-The placeholder disappears and the photograph is served in its place, lazily
+The brand panel disappears and the photograph is served in its place, lazily
 loaded and correctly sized. The `alt` text should describe what is in the
 photograph — it is read aloud by screen readers and used by search engines.
+
+Each `<Figure>` also carries a `note` describing the photograph intended for
+that slot. It is never shown to visitors; it is written into the page source as
+an HTML comment so whoever shoots the photography can see what was planned.
 
 Photographs to source, in priority order:
 
@@ -174,6 +182,43 @@ Photographs to source, in priority order:
 | Portrait of Dr. Welborn | `src/pages/index.astro`, `src/pages/about.astro` | 1200 × 1500 | Portrait |
 
 Export as JPEG at around 75–80% quality and keep each file under roughly 300 KB.
+
+---
+
+## Brand and artwork
+
+**The mark.** A “W” drawn as one continuous stroke whose final upstroke carries
+higher than the rest — the practice initial, and an upward line. It lives in
+`src/components/Logo.astro`, which is the single source of truth for its
+geometry. Three copies exist outside the component because they cannot import
+it, and all four must be changed together if the mark ever changes:
+
+- `src/components/Logo.astro` — the site header, footer and brand panels
+- `public/favicon.svg` — the browser tab
+- `scripts/apple-touch-icon.html` — the home-screen icon
+- `scripts/og-image.html` — the social sharing card
+
+`Logo.astro` takes a `tone`: `brand` (white on the practice blue, the default),
+`invert` (white on a translucent badge, for dark artwork) and `ink` (no badge,
+follows the surrounding text colour).
+
+**The artwork.** Three SVG files in `public/images/`, all drawn from the same
+geometry — sweeping arcs and concentric circles, echoing the mark:
+
+| File                    | Where it is used                                     |
+| ----------------------- | ---------------------------------------------------- |
+| `art-arcs-wide.svg`     | Hero brand panel, call-to-action band, social card    |
+| `art-arcs-portrait.svg` | The portrait slots where Dr. Welborn’s photo will go  |
+| `art-arcs-light.svg`    | Behind interior page headings (`HeroArt.astro`)       |
+
+They are vector, so they are small, stay sharp at any size, and never date the
+way stock photography does. They are decorative: every one is marked
+`aria-hidden` or given an empty `alt`, so screen readers skip them.
+
+**Colour.** One restrained slate blue, defined once in `src/styles/global.css`
+as `--accent` / `--accent-deep` / `--accent-dark`, on a warm off-white rather
+than clinical pure white. Changing those three values re-colours the whole site,
+artwork included — the SVGs use the same hex values, so update them to match.
 
 ---
 
@@ -235,6 +280,14 @@ It is licensed under the [SIL Open Font License 1.1](https://openfontlicense.org
 which permits this use; the licence text ships alongside the font at
 `public/fonts/schibsted-grotesk-OFL.txt` and must stay there.
 
+**Three weights, and only three.** Because it is a variable font, any value
+between 400 and 900 renders. That is a trap: 600 next to 650 does not read as
+emphasis, it reads as a second typeface on the same page. The site uses 400 for
+body copy, 500 for labels and small UI, and 600 for headings and buttons — the
+`--weight-regular` / `--weight-medium` / `--weight-semibold` tokens in
+`src/styles/global.css`. If something needs more presence, change its size or
+colour rather than adding a fourth weight.
+
 To change the typeface, replace the `.woff2` file and update the `@font-face`
 block at the top of `src/styles/global.css` along with the `--font-sans` token.
 The second `@font-face` in that file is a metrics-matched stand-in built from a
@@ -258,15 +311,17 @@ tags. If the domain changes, also update the `Sitemap:` line in
 
 `public/og-image.png` is the card shown when the site is shared on social media
 or in a text message. Its source is `scripts/og-image.html` — edit that file,
-then re-render it with any headless browser, for example:
+then re-render it:
 
 ```bash
-chromium --headless --screenshot=public/og-image.png --window-size=1200,630 \
-  scripts/og-image.html
+python3 scripts/render.py scripts/og-image.html public/og-image.png 1200 630
+python3 scripts/render.py scripts/apple-touch-icon.html public/apple-touch-icon.png 180 180
 ```
 
-`scripts/apple-touch-icon.html` produces `public/apple-touch-icon.png` the same
-way, at 180 × 180.
+`scripts/render.py` needs Pillow (`pip install pillow`) and a Chromium binary.
+It renders taller than asked and crops, because headless Chromium counts
+browser chrome in `--window-size` and otherwise hands back an image with a band
+of empty page along the bottom edge.
 
 ---
 
@@ -327,8 +382,8 @@ a placeholder pretending to be a credential.
 │   ├── _redirects             Short URLs (/insurance, /faq, /appointment)
 │   ├── fonts/                 Self-hosted typeface and its licence
 │   ├── forms/                 New patient PDFs go here
-│   └── images/                Photographs go here
-├── scripts/                   Sources for the generated images
+│   └── images/                Brand artwork; photographs go here too
+├── scripts/                   Sources for the generated images, and render.py
 └── src/
     ├── data/                  ← ALL EDITABLE CONTENT LIVES HERE
     │   ├── site.js            Practice details, locations, navigation

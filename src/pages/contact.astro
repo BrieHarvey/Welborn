@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroArt from '../components/HeroArt.astro';
 import ContactInfo from '../components/ContactInfo.astro';
 import AppointmentForm from '../components/AppointmentForm.astro';
 import { practice, locations, primaryLocation, officeHours, fullAddress } from '../data/site.js';
@@ -26,6 +27,7 @@ const breadcrumbs = {
 >
   <!-- ==================== INTRO ==================== -->
   <section class="page-hero" aria-labelledby="contact-title">
+    <HeroArt />
     <div class="container">
       <div class="page-hero__copy">
         <span class="eyebrow">Contact</span>
@@ -139,6 +141,8 @@ const breadcrumbs = {
 
 <style>
   .page-hero {
+    position: relative;
+    overflow: hidden;
     padding-block: clamp(2.75rem, 2rem + 4vw, 5rem) clamp(2.5rem, 2rem + 3vw, 4rem);
     background:
       radial-gradient(70% 130% at 90% 0%, rgba(51, 86, 107, 0.07) 0%, transparent 60%),
@@ -146,6 +150,7 @@ const breadcrumbs = {
   }
 
   .page-hero__copy {
+    position: relative;
     max-width: 42rem;
   }
 
@@ -196,7 +201,7 @@ const breadcrumbs = {
 
   .offices__hours-row dd {
     margin: 0;
-    font-weight: 550;
+    font-weight: 500;
     color: var(--ink);
   }
 

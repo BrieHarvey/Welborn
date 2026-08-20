@@ -23,7 +23,7 @@ const breadcrumbs = {
 
 <BaseLayout
   title="About Dr. J. Hearst Welborn, MD | Orthopaedic Surgeon, Pinole CA"
-  description="Meet J. Hearst Welborn, MD — a private practice orthopaedic surgeon in Pinole, California with more than 30 years of experience treating hand, shoulder, knee and hip conditions."
+  description="J. Hearst Welborn, MD is a private practice orthopaedic surgeon in Pinole, California with more than 30 years of experience in orthopaedic care."
   canonical="/about"
   schema={[breadcrumbs]}
 >
@@ -34,8 +34,8 @@ const breadcrumbs = {
         <span class="eyebrow">About</span>
         <h1 id="about-title">{practice.doctor.shortName}, MD</h1>
         <p class="page-hero__lead">
-          A private practice orthopaedic surgeon serving Pinole, Vallejo and the East Bay — where
-          patients are cared for by the same physician from first appointment through recovery.
+          A private practice orthopaedic surgeon serving Pinole and the East Bay — where patients
+          are cared for by the same physician from first appointment through recovery.
         </p>
         <div class="btn-row page-hero__buttons">
           <Button href="/contact#request-an-appointment">Request an Appointment</Button>
@@ -48,8 +48,13 @@ const breadcrumbs = {
       <div class="page-hero__media">
         <Figure
           alt={about.imageAlt}
-          label="Portrait of Dr. Welborn. Editorial, natural light, portrait orientation, approximately 1200 × 1500."
-          variant="portrait"
+          note="Portrait of Dr. Welborn. Editorial, natural light, portrait orientation, approximately 1200 × 1500."
+          panel={{
+            art: 'portrait',
+            kicker: practice.doctor.specialty,
+            title: practice.doctor.fullName,
+            sub: 'Pinole, California',
+          }}
           ratio="4 / 5"
           eager
         />
@@ -227,7 +232,6 @@ const breadcrumbs = {
 
   .bio__heading {
     font-size: var(--step-h2);
-    text-transform: lowercase;
     position: sticky;
     top: calc(var(--header-h) + 2rem);
   }

@@ -52,11 +52,23 @@ css = css.replace(
     f"url('data:font/woff2;base64,{font_b64}')",
 )
 
+# --- Images ----------------------------------------------------------------
+# The brand artwork is referenced by URL on the real site. A single-file preview
+# has nowhere to fetch it from, so each SVG travels inside the page.
+
+
+def inline_images(html: str) -> str:
+    for svg in sorted((DIST / 'images').glob('*.svg')):
+        data = base64.b64encode(svg.read_bytes()).decode()
+        html = html.replace(f'/images/{svg.name}', f'data:image/svg+xml;base64,{data}')
+    return html
+
+
 # --- Page bodies -----------------------------------------------------------
 templates = []
 titles = {}
 for route in PAGES:
-    html = page_file(route).read_text()
+    html = inline_images(page_file(route).read_text())
 
     title = re.search(r'<title>(.*?)</title>', html, re.S)
     titles[route] = title.group(1).strip() if title else 'Welborn Orthopedics'
@@ -101,7 +113,7 @@ OUT.write_text(f'''<title>Welborn Orthopedics</title>
 }}
 .preview-bar b {{
   color: #fff;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 0.6875rem;

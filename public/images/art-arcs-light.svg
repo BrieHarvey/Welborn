@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700" width="900" height="700" role="presentation">
+  <!--
+    Welborn Orthopedics — brand artwork, light.
+    The same sweeping arc geometry as the dark pieces, drawn in the practice
+    blue at low opacity for use on the warm page background. Decorative only.
+  -->
+  <defs>
+    <linearGradient id="lArc" x1="0" y1="1" x2="0.85" y2="0">
+      <stop offset="0%" stop-color="#33566B" stop-opacity="0"/>
+      <stop offset="42%" stop-color="#33566B" stop-opacity="0.62"/>
+      <stop offset="100%" stop-color="#33566B" stop-opacity="0.08"/>
+    </linearGradient>
+
+    <linearGradient id="lArcSoft" x1="0" y1="1" x2="0.9" y2="0">
+      <stop offset="0%" stop-color="#33566B" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#33566B" stop-opacity="0.34"/>
+      <stop offset="100%" stop-color="#33566B" stop-opacity="0"/>
+    </linearGradient>
+
+    <radialGradient id="lGlow" cx="0.72" cy="0.26" r="0.6">
+      <stop offset="0%" stop-color="#33566B" stop-opacity="0.09"/>
+      <stop offset="100%" stop-color="#33566B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="900" height="700" fill="url(#lGlow)"/>
+
+  <g fill="none" stroke-linecap="round">
+    <path d="M-40 660 C 190 620, 330 500, 430 350 C 524 208, 660 118, 940 74"
+          stroke="url(#lArc)" stroke-width="1.8"/>
+    <path d="M-40 736 C 220 690, 386 556, 486 396 C 578 248, 706 156, 940 122"
+          stroke="url(#lArcSoft)" stroke-width="1.3"/>
+    <path d="M-40 588 C 160 552, 288 448, 380 306 C 470 170, 612 82, 940 30"
+          stroke="url(#lArcSoft)" stroke-width="1.1"/>
+  </g>
+
+  <g fill="none" stroke="#33566B" transform="translate(636 224)">
+    <circle r="52"  stroke-opacity="0.16" stroke-width="1.2"/>
+    <circle r="96"  stroke-opacity="0.09" stroke-width="1"/>
+    <circle r="148" stroke-opacity="0.05" stroke-width="1"/>
+    <circle r="4" fill="#33566B" fill-opacity="0.22" stroke="none"/>
+  </g>
+
+  <g stroke="#33566B" stroke-opacity="0.045" stroke-width="1">
+    <path d="M0 210 H900"/>
+    <path d="M0 470 H900"/>
+    <path d="M300 0 V700"/>
+    <path d="M620 0 V700"/>
+  </g>
+</svg>

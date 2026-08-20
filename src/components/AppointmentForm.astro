@@ -122,26 +122,37 @@ const reasons = [
         </div>
       </fieldset>
 
-      <div class="field">
-        <label for="location">Preferred office</label>
-        <select id="location" name="location">
-          <option value="No preference">No preference</option>
-          {
-            locations.map((loc) => (
-              <option value={loc.name}>
-                {loc.city}
-                {loc.id === 'vallejo' ? ' — by appointment' : ''}
-              </option>
-            ))
-          }
-        </select>
-      </div>
+      {
+        /* The office selector only appears if the practice has more than one
+           location — with a single office it would be a question with one answer. */
+        locations.length > 1 && (
+          <div class="field">
+            <label for="location">Preferred office</label>
+            <select id="location" name="location">
+              <option value="No preference">No preference</option>
+              {locations.map((loc) => (
+                <option value={loc.name}>{loc.city}</option>
+              ))}
+            </select>
+          </div>
+        )
+      }
 
       <div class="field">
         <label for="reason">General reason for visit</label>
         <select id="reason" name="reason">
           <option value="">Select one</option>
           {reasons.map((reason) => <option value={reason}>{reason}</option>)}
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="patientType">Are you a new or returning patient?</label>
+        <select id="patientType" name="patientType">
+          <option value="">Select one</option>
+          <option value="New patient">New patient</option>
+          <option value="Returning patient">Returning patient</option>
+          <option value="Second opinion">Second opinion</option>
         </select>
       </div>
 
@@ -220,7 +231,7 @@ const reasons = [
 
   .apt__notice-title {
     font-size: var(--step-small);
-    font-weight: 650;
+    font-weight: 600;
     color: #7c4f18;
     letter-spacing: 0;
   }
@@ -455,7 +466,7 @@ const reasons = [
 
   .apt__status a {
     color: inherit;
-    font-weight: 650;
+    font-weight: 600;
   }
 
   .apt__privacy {

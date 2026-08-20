@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroArt from '../components/HeroArt.astro';
 import TreatmentCard from '../components/TreatmentCard.astro';
 import CtaSection from '../components/CtaSection.astro';
 import Button from '../components/Button.astro';
@@ -43,6 +44,7 @@ const itemList = {
 >
   <!-- ==================== INTRO ==================== -->
   <section class="page-hero" aria-labelledby="ct-title">
+    <HeroArt />
     <div class="container">
       <div class="page-hero__copy">
         <span class="eyebrow">Conditions &amp; treatments</span>
@@ -132,6 +134,8 @@ const itemList = {
 
 <style>
   .page-hero {
+    position: relative;
+    overflow: hidden;
     padding-block: clamp(2.75rem, 2rem + 4vw, 5rem) clamp(2.5rem, 2rem + 3vw, 4rem);
     background:
       radial-gradient(70% 130% at 90% 0%, rgba(51, 86, 107, 0.07) 0%, transparent 60%),
@@ -139,6 +143,7 @@ const itemList = {
   }
 
   .page-hero__copy {
+    position: relative;
     max-width: 46rem;
   }
 
@@ -156,6 +161,7 @@ const itemList = {
 
   /* ---------- Jump nav ---------- */
   .jump {
+    position: relative;
     margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
   }
 
@@ -175,7 +181,7 @@ const itemList = {
     border: 1px solid var(--line-strong);
     border-radius: var(--radius-pill);
     font-size: var(--step-small);
-    font-weight: 550;
+    font-weight: 500;
     color: var(--ink);
     text-decoration: none;
     transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
@@ -196,7 +202,7 @@ const itemList = {
     background: var(--accent-tint);
     border-radius: var(--radius-pill);
     font-size: 0.75rem;
-    font-weight: 650;
+    font-weight: 600;
     color: var(--accent-deep);
   }
 

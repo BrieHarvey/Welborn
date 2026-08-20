@@ -1,9 +1,9 @@
 ---
 import { practice, locations, legal, cityLine } from '../data/site.js';
+import Logo from './Logo.astro';
 
 const year = new Date().getFullYear();
 const pinole = locations.find((l) => l.id === 'pinole')!;
-const vallejo = locations.find((l) => l.id === 'vallejo');
 
 const siteLinks = [
   { label: 'About Dr. Welborn', href: '/about' },
@@ -18,6 +18,7 @@ const siteLinks = [
   <div class="container">
     <div class="site-footer__grid">
       <div class="site-footer__identity">
+        <Logo variant="mark" tone="invert" size={44} class="site-footer__logo" />
         <p class="site-footer__practice">{practice.name}</p>
         <p class="site-footer__doctor">{practice.doctor.fullName}</p>
         <p class="site-footer__specialty">{practice.doctor.specialty}</p>
@@ -45,22 +46,16 @@ const siteLinks = [
         </ul>
       </div>
 
-      {
-        vallejo && (
-          <div class="site-footer__block">
-            <h2 class="site-footer__heading">Vallejo</h2>
-            <address class="site-footer__address">
-              Vallejo, California
-              <br />
-              By Appointment
-            </address>
-            <p class="site-footer__note">
-              Location details available on request —{' '}
-              <a href={`tel:${practice.phoneHref}`}>call the office</a>.
-            </p>
-          </div>
-        )
-      }
+      <div class="site-footer__block">
+        <h2 class="site-footer__heading">Appointments</h2>
+        <p class="site-footer__note">
+          New and returning patients are welcome. Call the office to schedule, or send a request and
+          the office will follow up.
+        </p>
+        <a class="site-footer__cta" href="/contact#request-an-appointment">
+          Request an appointment
+        </a>
+      </div>
 
       <nav class="site-footer__block" aria-label="Footer">
         <h2 class="site-footer__heading">Explore</h2>
@@ -91,6 +86,7 @@ const siteLinks = [
 <style>
   .site-footer {
     background: var(--accent-dark);
+    border-top: 1px solid var(--line-invert);
     color: var(--ink-invert-2);
     padding-block: clamp(3.5rem, 2.6rem + 3.5vw, 5.5rem) 2.5rem;
     font-size: var(--step-small);
@@ -119,9 +115,13 @@ const siteLinks = [
     min-width: 0;
   }
 
+  .site-footer__logo {
+    margin-bottom: 1.1rem;
+  }
+
   .site-footer__practice {
     font-size: 1.25rem;
-    font-weight: 650;
+    font-weight: 600;
     letter-spacing: -0.018em;
     color: #fff;
   }
@@ -166,8 +166,17 @@ const siteLinks = [
   }
 
   .site-footer__note {
-    margin-top: 0.85rem;
     color: rgba(255, 255, 255, 0.62);
+    max-width: 20rem;
+  }
+
+  .site-footer__cta {
+    display: inline-block;
+    margin-top: 1rem;
+    padding-bottom: 0.15rem;
+    color: #fff;
+    font-weight: 500;
+    border-bottom-color: rgba(255, 255, 255, 0.45);
   }
 
   .site-footer__links {

@@ -1,20 +1,33 @@
 ---
 /**
- * Figure — photography slot with a built-in placeholder.
+ * Figure — photography slot.
  *
- * While `src` is empty this renders a clearly-marked placeholder describing the
- * photograph that belongs there. Set `src` to a real image path (for example
- * "/images/dr-welborn-portrait.jpg") and the placeholder is replaced by a
+ * While `src` is empty this renders the practice's own brand panel (see
+ * BrandPanel.astro), which is designed to stand on its own rather than look
+ * like a missing image. Set `src` to a real photograph — for example
+ * "/images/dr-welborn-portrait.jpg" — and the panel is replaced by a
  * responsive, lazy-loaded photograph. Nothing else needs to change.
+ *
+ * `note` describes the photograph that belongs here. It is not shown to
+ * visitors; it is written into the page source as a comment for whoever adds
+ * the photography later.
  *
  * See README → "Swapping in photography".
  */
+import BrandPanel from './BrandPanel.astro';
+
 interface Props {
   src?: string;
   alt: string;
-  /** Short description of the photograph that belongs here. */
-  label?: string;
-  variant?: 'motion' | 'portrait' | 'detail' | 'wide';
+  /** Description of the intended photograph, for developers. Not displayed. */
+  note?: string;
+  /** Content shown on the brand panel while there is no photograph. */
+  panel?: {
+    art?: 'wide' | 'portrait';
+    kicker?: string;
+    title?: string;
+    sub?: string;
+  };
   ratio?: string;
   /** Set true for an image visible on first paint (the hero). */
   eager?: boolean;
@@ -26,8 +39,8 @@ interface Props {
 const {
   src = '',
   alt,
-  label = '',
-  variant = 'motion',
+  note = '',
+  panel = {},
   ratio = '4 / 3',
   eager = false,
   width = 1200,
@@ -50,60 +63,18 @@ const {
       style={`aspect-ratio: ${ratio};`}
     />
   ) : (
-    <div
-      class:list={['ph', className]}
-      style={`aspect-ratio: ${ratio};`}
-      role="img"
-      aria-label={`Image placeholder. ${label || alt}`}
-    >
-      <svg class="ph__art" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
-        <defs>
-          <linearGradient id={`g-${variant}`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#eef3f5" />
-            <stop offset="55%" stop-color="#dfe8ed" />
-            <stop offset="100%" stop-color="#c8d6dd" />
-          </linearGradient>
-        </defs>
-        <rect width="400" height="300" fill={`url(#g-${variant})`} />
-        {variant === 'motion' && (
-          <g fill="none" stroke="#33566b" stroke-opacity="0.17" stroke-width="1.1" stroke-linecap="round">
-            <path d="M-20 250 C 90 200, 150 120, 210 40" />
-            <path d="M10 268 C 120 220, 182 140, 244 56" />
-            <path d="M40 286 C 150 240, 214 160, 278 72" />
-            <path d="M320 300 C 350 230, 372 150, 380 60" stroke-opacity="0.1" />
-            <circle cx="292" cy="96" r="46" stroke-opacity="0.13" />
-            <circle cx="292" cy="96" r="72" stroke-opacity="0.08" />
-          </g>
-        )}
-        {variant === 'portrait' && (
-          <g fill="none" stroke="#33566b" stroke-opacity="0.14" stroke-width="1.1">
-            <circle cx="200" cy="130" r="66" />
-            <circle cx="200" cy="130" r="98" stroke-opacity="0.09" />
-            <path d="M78 300 C 96 224, 140 190, 200 190 C 260 190, 304 224, 322 300" stroke-opacity="0.16" />
-          </g>
-        )}
-        {variant === 'detail' && (
-          <g fill="none" stroke="#33566b" stroke-opacity="0.15" stroke-width="1.1" stroke-linecap="round">
-            <path d="M60 300 C 60 200, 110 150, 200 150 C 290 150, 340 200, 340 300" />
-            <path d="M104 300 C 104 226, 144 188, 200 188 C 256 188, 296 226, 296 300" stroke-opacity="0.11" />
-            <path d="M148 300 C 148 252, 176 226, 200 226 C 224 226, 252 252, 252 300" stroke-opacity="0.08" />
-            <line x1="0" y1="118" x2="400" y2="118" stroke-opacity="0.07" />
-          </g>
-        )}
-        {variant === 'wide' && (
-          <g fill="none" stroke="#33566b" stroke-opacity="0.13" stroke-width="1.1" stroke-linecap="round">
-            <path d="M-10 210 C 100 178, 200 178, 410 128" />
-            <path d="M-10 240 C 110 210, 210 206, 410 152" stroke-opacity="0.1" />
-            <path d="M-10 180 C 90 148, 210 152, 410 104" stroke-opacity="0.09" />
-            <circle cx="330" cy="86" r="40" stroke-opacity="0.12" />
-          </g>
-        )}
-      </svg>
-      <p class="ph__label">
-        <b>Image placeholder</b>
-        {label || alt}
-      </p>
-    </div>
+    <Fragment>
+      {note && <Fragment set:html={`<!-- Photography slot: ${note} -->`} />}
+      <BrandPanel
+        art={panel.art ?? 'wide'}
+        ratio={ratio}
+        kicker={panel.kicker}
+        title={panel.title}
+        sub={panel.sub}
+        eager={eager}
+        class={className}
+      />
+    </Fragment>
   )
 }
 
@@ -112,13 +83,5 @@ const {
     width: 100%;
     object-fit: cover;
     border-radius: var(--radius-lg);
-  }
-
-  .ph__art {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
   }
 </style>

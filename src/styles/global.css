@@ -70,6 +70,16 @@
   --line-strong: #7e8a95;
   --line-invert: rgba(255, 255, 255, 0.16);
 
+  /* Weights — THE SITE USES THESE THREE AND NO OTHERS.
+     Schibsted Grotesk is a variable font, so any value from 400 to 900 will
+     render. That is the trap: 600 beside 650 does not read as emphasis, it
+     reads as a second typeface. Every weight on the site is one of the three
+     below. If a heading needs more presence, change its size or colour rather
+     than inventing a fourth weight. */
+  --weight-regular: 400; /* body copy */
+  --weight-medium: 500; /* eyebrows, labels, nav links, small UI */
+  --weight-semibold: 600; /* headings, buttons, anything emphasised */
+
   /* Type scale — fluid, clamps between mobile and desktop */
   --step-display: clamp(2.5rem, 1.55rem + 3.9vw, 4.375rem);
   --step-h1: clamp(2.125rem, 1.55rem + 2.5vw, 3.375rem);
@@ -656,7 +666,7 @@ strong {
 
 .ph__label b {
   display: block;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-size: 0.6875rem;

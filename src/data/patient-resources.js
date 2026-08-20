@@ -136,8 +136,8 @@ export const faqs = {
       a: 'Call the office. For anything urgent outside of office hours — including chest pain, shortness of breath, a fever, a wound that is opening or draining, or a limb that becomes numb, cold or severely swollen — seek emergency care immediately or call 911. Do not use the website form to report an urgent problem.',
     },
     {
-      q: 'Is there an office in Vallejo?',
-      a: 'Dr. Welborn sees patients in Vallejo by appointment. Please call the office for location details and availability when you schedule.',
+      q: 'Where is the office located?',
+      a: 'Welborn Orthopedics is located at 1700 San Pablo Avenue, Suite F, in Pinole, California. Directions and a map are on the Contact page, and the office can give you arrival details over the phone if you need them.',
     },
   ],
 };
