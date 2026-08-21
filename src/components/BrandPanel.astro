@@ -49,7 +49,7 @@ const dimensions = art === 'portrait' ? { w: 1000, h: 1250 } : { w: 1200, h: 800
   />
 
   <div class="bpanel__inner">
-    <Logo variant="mark" tone="invert" size={art === 'portrait' ? 60 : 52} />
+    <Logo variant="horizontal" tone="tile" height={art === 'portrait' ? 34 : 38} />
 
     {
       (kicker || title || sub) && (

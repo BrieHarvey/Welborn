@@ -2,24 +2,30 @@
   <!--
     Welborn Orthopedics — brand artwork, light.
     The same sweeping arc geometry as the dark pieces, drawn in the practice
-    blue at low opacity for use on the warm page background. Decorative only.
+    blue at low opacity for use on the page background. Decorative only.
   -->
   <defs>
     <linearGradient id="lArc" x1="0" y1="1" x2="0.85" y2="0">
-      <stop offset="0%" stop-color="#33566B" stop-opacity="0"/>
-      <stop offset="42%" stop-color="#33566B" stop-opacity="0.62"/>
-      <stop offset="100%" stop-color="#33566B" stop-opacity="0.08"/>
+      <stop offset="0%" stop-color="#0D92B8" stop-opacity="0"/>
+      <stop offset="42%" stop-color="#0D92B8" stop-opacity="0.62"/>
+      <stop offset="100%" stop-color="#0D92B8" stop-opacity="0.08"/>
     </linearGradient>
 
     <linearGradient id="lArcSoft" x1="0" y1="1" x2="0.9" y2="0">
-      <stop offset="0%" stop-color="#33566B" stop-opacity="0"/>
-      <stop offset="50%" stop-color="#33566B" stop-opacity="0.34"/>
-      <stop offset="100%" stop-color="#33566B" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#43A4A4" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#43A4A4" stop-opacity="0.38"/>
+      <stop offset="100%" stop-color="#43A4A4" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="lArcGreen" x1="0" y1="1" x2="0.9" y2="0">
+      <stop offset="0%" stop-color="#7ABC8D" stop-opacity="0"/>
+      <stop offset="52%" stop-color="#7ABC8D" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#7ABC8D" stop-opacity="0"/>
     </linearGradient>
 
     <radialGradient id="lGlow" cx="0.72" cy="0.26" r="0.6">
-      <stop offset="0%" stop-color="#33566B" stop-opacity="0.09"/>
-      <stop offset="100%" stop-color="#33566B" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#0D92B8" stop-opacity="0.09"/>
+      <stop offset="100%" stop-color="#0D92B8" stop-opacity="0"/>
     </radialGradient>
   </defs>
 
@@ -31,17 +37,17 @@
     <path d="M-40 736 C 220 690, 386 556, 486 396 C 578 248, 706 156, 940 122"
           stroke="url(#lArcSoft)" stroke-width="1.3"/>
     <path d="M-40 588 C 160 552, 288 448, 380 306 C 470 170, 612 82, 940 30"
-          stroke="url(#lArcSoft)" stroke-width="1.1"/>
+          stroke="url(#lArcGreen)" stroke-width="1.1"/>
   </g>
 
-  <g fill="none" stroke="#33566B" transform="translate(636 224)">
+  <g fill="none" stroke="#0D92B8" transform="translate(636 224)">
     <circle r="52"  stroke-opacity="0.16" stroke-width="1.2"/>
     <circle r="96"  stroke-opacity="0.09" stroke-width="1"/>
     <circle r="148" stroke-opacity="0.05" stroke-width="1"/>
-    <circle r="4" fill="#33566B" fill-opacity="0.22" stroke="none"/>
+    <circle r="4" fill="#0D92B8" fill-opacity="0.22" stroke="none"/>
   </g>
 
-  <g stroke="#33566B" stroke-opacity="0.045" stroke-width="1">
+  <g stroke="#0D92B8" stroke-opacity="0.045" stroke-width="1">
     <path d="M0 210 H900"/>
     <path d="M0 470 H900"/>
     <path d="M300 0 V700"/>

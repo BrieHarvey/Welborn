@@ -223,16 +223,16 @@ const reasons = [
   .apt__notice {
     margin-top: 2rem;
     padding: 1.15rem 1.35rem;
-    background: #fdf6ee;
-    border: 1px solid #ecd9c0;
-    border-left: 3px solid #b0752f;
+    background: var(--note-bg);
+    border: 1px solid var(--note-line);
+    border-left: 3px solid var(--note-mark);
     border-radius: var(--radius);
   }
 
   .apt__notice-title {
     font-size: var(--step-small);
     font-weight: 600;
-    color: #7c4f18;
+    color: var(--note-ink);
     letter-spacing: 0;
   }
 
@@ -240,11 +240,11 @@ const reasons = [
     margin-top: 0.4rem;
     font-size: var(--step-small);
     line-height: 1.6;
-    color: #6d4a20;
+    color: var(--note-ink);
   }
 
   .apt__notice a {
-    color: #7c4f18;
+    color: var(--note-ink);
     font-weight: 600;
   }
 
@@ -292,7 +292,7 @@ const reasons = [
   }
 
   .req {
-    color: #a2431f;
+    color: var(--error-ink);
     font-weight: 600;
   }
 
@@ -342,13 +342,13 @@ const reasons = [
   input[aria-invalid='true'],
   textarea[aria-invalid='true'],
   select[aria-invalid='true'] {
-    border-color: #a2431f;
+    border-color: var(--error-ink);
   }
 
   .field__error {
     font-size: var(--step-xs);
     font-weight: 600;
-    color: #8f3a1a;
+    color: var(--error-ink-deep);
   }
 
   .field__help {
@@ -453,15 +453,15 @@ const reasons = [
   }
 
   .apt__status[data-state='success'] {
-    background: #f0f6f1;
-    border-color: #c8dfcd;
-    color: #26492f;
+    background: var(--ok-bg);
+    border-color: var(--ok-line);
+    color: var(--ok-ink);
   }
 
   .apt__status[data-state='error'] {
-    background: #fdf3f0;
-    border-color: #ecccc1;
-    color: #7d3418;
+    background: var(--note-bg);
+    border-color: var(--note-line);
+    color: var(--error-ink-deep);
   }
 
   .apt__status a {

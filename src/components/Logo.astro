@@ -1,129 +1,85 @@
 ---
 /**
- * Logo — the Welborn Orthopedics mark.
+ * Logo — the Welborn Orthopedics logo.
  *
- * The mark is a "W" drawn as one continuous stroke whose final upstroke carries
- * higher than the rest: the practice initial, and an upward line — movement
- * restored. Mitred joints keep it precise rather than decorative, and it stays
- * legible down to a 16px favicon.
+ * The practice supplied the logo as a stacked lockup: the mark above the
+ * words. That shape is too tall for a sticky header, so the same artwork is
+ * also generated as a horizontal lockup and as the mark on its own. All of
+ * them come from one source file — see scripts/trace-logo.py and the README
+ * section "Brand and artwork".
  *
- * variant  'lockup'  mark + practice name + specialty  (site header, brand panels)
- *          'mark'    the badge on its own               (favicons, small spaces)
- * tone     'brand'   white mark on the practice blue    (default)
- *          'invert'  white mark on a transparent badge  (dark backgrounds)
- *          'ink'     mark drawn in the current text colour, no badge
+ * variant  'horizontal'  mark beside the words  — the site header
+ *          'stacked'     the supplied lockup    — where height allows
+ *          'mark'        the mark alone         — small spaces, favicons
+ *
+ * tone     'colour'  the logo as supplied — for white and light backgrounds
+ *          'tile'    the logo on a white tile — for dark backgrounds
+ *
+ * The mark relies on white gaps between the spine and the cross, so it cannot
+ * simply be dropped onto a dark panel: the spine would run into the cross and
+ * the shape would be lost. `tone="tile"` is the fix, and it keeps the brand
+ * colours exact rather than flattening the logo to one colour.
  */
 interface Props {
-  variant?: 'lockup' | 'mark';
-  tone?: 'brand' | 'invert' | 'ink';
-  size?: number;
-  /** Line shown under the practice name. Pass '' to hide it. */
-  sub?: string;
+  variant?: 'horizontal' | 'stacked' | 'mark';
+  tone?: 'colour' | 'tile';
+  /** Rendered height in pixels. Width follows the artwork's proportions. */
+  height?: number;
+  /** Set true for the logo in the page header, which is visible immediately. */
+  eager?: boolean;
   class?: string;
 }
 
 const {
-  variant = 'lockup',
-  tone = 'brand',
-  size = 38,
-  sub = 'Orthopaedic Surgery',
+  variant = 'horizontal',
+  tone = 'colour',
+  height = 46,
+  eager = false,
   class: className = '',
 } = Astro.props;
 
-// The single source of truth for the mark's geometry. If this changes, update
-// public/favicon.svg, scripts/apple-touch-icon.html and scripts/og-image.html
-// to match.
-const W = 'M13 25 L22 44 L31.5 21 L41 44 L52 15';
+// Intrinsic sizes of the generated artwork, so the browser reserves the right
+// space before the SVG arrives and the header never shifts.
+const ART = {
+  horizontal: { src: '/images/logo-horizontal.svg', w: 405, h: 100 },
+  stacked: { src: '/images/logo-stacked.svg', w: 845, h: 857 },
+  mark: { src: '/images/logo-mark.svg', w: 600, h: 645 },
+};
+
+const art = ART[variant];
+const width = Math.round((art.w / art.h) * height);
 ---
 
-<span class:list={['logo', `logo--${variant}`, `logo--${tone}`, className]}>
-  <svg
-    class="logo__mark"
-    viewBox="0 0 64 64"
-    width={size}
-    height={size}
-    aria-hidden="true"
-    focusable="false"
-  >
-    {tone !== 'ink' && <rect class="logo__badge" x="0" y="0" width="64" height="64" rx="15" />}
-    <path
-      class="logo__stroke"
-      d={W}
-      fill="none"
-      stroke-width="5"
-      stroke-linecap="round"
-      stroke-linejoin="miter"
-      stroke-miterlimit="6"
-    />
-  </svg>
-
-  {
-    variant === 'lockup' && (
-      <span class="logo__text">
-        <span class="logo__name">Welborn Orthopedics</span>
-        {sub && <span class="logo__sub">{sub}</span>}
-      </span>
-    )
-  }
+<span class:list={['logo', `logo--${tone}`, className]}>
+  <img
+    class="logo__art"
+    src={art.src}
+    alt="Welborn Orthopedics"
+    width={width}
+    height={height}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding={eager ? 'sync' : 'async'}
+    fetchpriority={eager ? 'high' : 'auto'}
+  />
 </span>
 
 <style>
   .logo {
     display: inline-flex;
-    align-items: center;
-    gap: 0.7rem;
-    min-width: 0;
-  }
-
-  .logo__mark {
     flex: none;
+    /* Never stretch inside a flex or grid parent — a logo has one size. */
+    align-self: flex-start;
+  }
+
+  .logo__art {
     display: block;
+    height: auto;
   }
 
-  /* ---- brand: white mark on the practice blue ---- */
-  .logo--brand .logo__badge {
-    fill: var(--accent-dark);
-  }
-  .logo--brand .logo__stroke {
-    stroke: #fff;
-  }
-
-  /* ---- invert: white mark, translucent badge, for dark artwork ---- */
-  .logo--invert .logo__badge {
-    fill: rgba(255, 255, 255, 0.08);
-    stroke: rgba(255, 255, 255, 0.3);
-    stroke-width: 1;
-  }
-  .logo--invert .logo__stroke {
-    stroke: #fff;
-  }
-
-  /* ---- ink: no badge, follows the surrounding text colour ---- */
-  .logo--ink .logo__stroke {
-    stroke: currentColor;
-  }
-
-  .logo__text {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    line-height: 1.15;
-  }
-
-  .logo__name {
-    font-size: 1.0625rem;
-    font-weight: 600;
-    letter-spacing: -0.014em;
-    white-space: nowrap;
-  }
-
-  .logo__sub {
-    margin-top: 0.2rem;
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-    opacity: 0.62;
-    white-space: nowrap;
+  /* A white tile so the logo keeps its own colours on a dark band. */
+  .logo--tile {
+    padding: 0.6em 0.7em;
+    background: #fff;
+    border-radius: var(--radius);
   }
 </style>

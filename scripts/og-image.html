@@ -20,8 +20,8 @@
 
       body {
         background:
-          radial-gradient(90% 120% at 85% 0%, rgba(51, 86, 107, 0.62) 0%, transparent 62%),
-          #1a2f3b;
+          radial-gradient(90% 120% at 85% 0%, rgba(13, 146, 184, 0.5) 0%, transparent 62%),
+          #083e4e;
         font-family: 'Schibsted Grotesk', 'Liberation Sans', Helvetica, Arial, sans-serif;
         color: #fff;
       }
@@ -35,7 +35,7 @@
         padding: 58px 76px;
         overflow: hidden;
         background-image:
-          linear-gradient(100deg, #1a2f3b 22%, rgba(26, 47, 59, 0) 74%),
+          linear-gradient(100deg, #083e4e 22%, rgba(8, 62, 78, 0) 74%),
           url('../public/images/art-arcs-wide.svg');
         background-size: cover, cover;
         background-position: center, center;
@@ -55,13 +55,12 @@
         height: 54px;
       }
 
-      .mark { width: 54px; height: 54px; flex-shrink: 0; }
-
-      .practice {
-        font-size: 25px;
-        font-weight: 600;
-        line-height: 1.2;
-        letter-spacing: -0.015em;
+      /* The logo on a white tile — the mark has white gaps in it, so it
+         cannot sit straight on the dark card. */
+      .lockup {
+        height: 54px; width: auto; display: block;
+        padding: 13px 17px; background: #fff; border-radius: 10px;
+        box-sizing: content-box;
       }
 
       .middle { position: relative; margin-top: 46px; }
@@ -127,12 +126,7 @@
       <div class="grain"></div>
 
       <div class="top">
-        <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
-          <rect width="64" height="64" rx="15" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.3)" stroke-width="1" />
-          <path d="M13 25 L22 44 L31.5 21 L41 44 L52 15" fill="none" stroke="#fff" stroke-width="5"
-                stroke-linecap="round" stroke-linejoin="miter" stroke-miterlimit="6" />
-        </svg>
-        <div class="practice">Welborn Orthopedics</div>
+        <img class="lockup" src="../public/images/logo-horizontal.svg" alt="" />
       </div>
 
       <div class="middle">

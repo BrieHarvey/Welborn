@@ -18,17 +18,15 @@ const { headline = appointmentCta.headline, body = appointmentCta.body } = Astro
 <section class="cta on-dark" aria-labelledby="cta-heading">
   <!-- Brand artwork. Decorative only, hidden from assistive technology. -->
   <div class="cta__art" aria-hidden="true">
-    <img src="/images/art-arcs-wide.svg" alt="" width="1200" height="800" loading="lazy" />
-    <svg class="cta__mark" viewBox="0 0 64 64" focusable="false">
-      <path
-        d="M13 25 L22 44 L31.5 21 L41 44 L52 15"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="4"
-        stroke-linecap="round"
-        stroke-linejoin="miter"
-        stroke-miterlimit="6"></path>
-    </svg>
+    <img class="cta__bg" src="/images/art-arcs-wide.svg" alt="" width="1200" height="800" loading="lazy" />
+    <img
+      class="cta__mark"
+      src="/images/logo-mark.svg"
+      alt=""
+      width="600"
+      height="645"
+      loading="lazy"
+    />
   </div>
 
   <div class="container">
@@ -70,7 +68,7 @@ const { headline = appointmentCta.headline, body = appointmentCta.body } = Astro
     overflow: hidden;
     padding-block: clamp(4rem, 3rem + 4.5vw, 7rem);
     background:
-      radial-gradient(120% 130% at 12% 0%, rgba(51, 86, 107, 0.55) 0%, transparent 62%),
+      radial-gradient(120% 130% at 12% 0%, rgba(13, 146, 184, 0.42) 0%, transparent 62%),
       var(--accent-dark);
   }
 
@@ -86,22 +84,25 @@ const { headline = appointmentCta.headline, body = appointmentCta.body } = Astro
     mask-image: linear-gradient(90deg, transparent 0%, #000 32%);
   }
 
-  .cta__art img {
+  /* Targeted at the background image only — the watermark below is also an
+     <img> inside this container and must keep its own size. */
+  .cta__bg {
     width: 100%;
     height: 100%;
     object-fit: cover;
     opacity: 0.85;
   }
 
+  /* The mark as a watermark. It is set well back so the artwork reads as
+     texture rather than as a second logo competing with the header. */
   .cta__mark {
     position: absolute;
     right: clamp(1.5rem, -1rem + 6vw, 5rem);
     top: 50%;
     transform: translateY(-50%);
-    width: clamp(7rem, 4rem + 9vw, 12rem);
+    width: clamp(7rem, 4rem + 9vw, 11rem);
     height: auto;
-    color: #fff;
-    opacity: 0.16;
+    opacity: 0.14;
   }
 
   @media (max-width: 60rem) {

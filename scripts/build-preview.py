@@ -53,14 +53,21 @@ css = css.replace(
 )
 
 # --- Images ----------------------------------------------------------------
-# The brand artwork is referenced by URL on the real site. A single-file preview
-# has nowhere to fetch it from, so each SVG travels inside the page.
+# The logo and artwork are referenced by URL on the real site. A single-file
+# preview has nowhere to fetch them from, so each SVG has to travel inside the
+# page — but inlining it at every use would repeat the logo on all 28 pages.
+# Instead each file is carried once in a lookup below, and the router swaps the
+# real data in when a page is rendered.
+
+IMAGES = {
+    svg.name: 'data:image/svg+xml;base64,' + base64.b64encode(svg.read_bytes()).decode()
+    for svg in sorted((DIST / 'images').glob('*.svg'))
+}
 
 
 def inline_images(html: str) -> str:
-    for svg in sorted((DIST / 'images').glob('*.svg')):
-        data = base64.b64encode(svg.read_bytes()).decode()
-        html = html.replace(f'/images/{svg.name}', f'data:image/svg+xml;base64,{data}')
+    for name in IMAGES:
+        html = html.replace(f'src="/images/{name}"', f'data-img="{name}" src=""')
     return html
 
 
@@ -87,6 +94,7 @@ for route in PAGES:
     templates.append(f'<template data-route="{route}">{body}</template>')
 
 TEMPLATES = '\n'.join(templates)
+IMAGES_JSON = __import__('json').dumps(IMAGES)
 TITLES = ',\n      '.join(f'{route!r}: {titles[route]!r}' for route in PAGES)
 
 OUT.parent.mkdir(exist_ok=True)
@@ -146,6 +154,15 @@ OUT.write_text(f'''<title>Welborn Orthopedics</title>
   const titles = {{
       {TITLES}
   }};
+  const images = {IMAGES_JSON};
+
+  /* The SVGs are carried once each, not once per page — see build-preview.py. */
+  function fillImages(scope) {{
+    scope.querySelectorAll('img[data-img]').forEach((img) => {{
+      const src = images[img.dataset.img];
+      if (src) img.src = src;
+    }});
+  }}
 
   const routeOf = (path) => (document.querySelector(`template[data-route="${{path}}"]`) ? path : '/');
 
@@ -219,7 +236,9 @@ OUT.write_text(f'''<title>Welborn Orthopedics</title>
   function render(path, push) {{
     const route = routeOf(path);
     const tpl = document.querySelector(`template[data-route="${{route}}"]`);
-    app.replaceChildren(tpl.content.cloneNode(true));
+    const frag = tpl.content.cloneNode(true);
+    fillImages(frag);
+    app.replaceChildren(frag);
     document.title = titles[route] || 'Welborn Orthopedics';
     if (push) history.pushState({{ route }}, '', '#' + route);
     wireMenu(app);

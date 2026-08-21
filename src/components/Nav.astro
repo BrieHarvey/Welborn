@@ -19,7 +19,7 @@ function isActive(href: string) {
 <header class="site-header" id="site-header" data-header>
   <div class="site-header__inner container">
     <a class="brand" href="/" aria-label={`${practice.name} — home`}>
-      <Logo size={36} sub={practice.doctor.specialty} />
+      <Logo variant="horizontal" height={44} eager />
     </a>
 
     <nav class="site-nav" aria-label="Primary">
@@ -101,7 +101,7 @@ function isActive(href: string) {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(251, 250, 248, 0.88);
+    background: rgba(249, 251, 252, 0.88);
     backdrop-filter: saturate(1.4) blur(12px);
     -webkit-backdrop-filter: saturate(1.4) blur(12px);
     border-bottom: 1px solid transparent;
@@ -111,8 +111,8 @@ function isActive(href: string) {
 
   .site-header.is-stuck {
     border-bottom-color: var(--line);
-    background: rgba(251, 250, 248, 0.95);
-    box-shadow: 0 1px 20px rgba(20, 25, 31, 0.05);
+    background: rgba(249, 251, 252, 0.95);
+    box-shadow: 0 1px 20px rgba(8, 62, 78, 0.07);
   }
 
   .site-header__inner {
@@ -133,12 +133,7 @@ function isActive(href: string) {
     flex-shrink: 0;
   }
 
-  /* The mark and wordmark live in Logo.astro; only the header-specific
-     behaviour is set here. */
-  .brand :global(.logo__sub) {
-    color: var(--ink-3);
-    opacity: 1;
-  }
+  /* The logo artwork lives in Logo.astro. */
 
   /* Desktop nav ---------------------------------------------------------- */
   .site-nav__list {
@@ -327,8 +322,8 @@ function isActive(href: string) {
   }
 
   @media (max-width: 400px) {
-    .brand :global(.logo__sub) {
-      display: none;
+    .brand :global(.logo__art) {
+      height: 36px;
     }
     .menu-toggle__label {
       display: none;

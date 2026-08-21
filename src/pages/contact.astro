@@ -93,17 +93,17 @@ const breadcrumbs = {
         <div class="map" data-map data-src={mapEmbed}>
           <div class="map__facade" data-map-facade>
             <svg class="map__art" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
-              <rect width="800" height="400" fill="#eef1ec" />
-              <g stroke="#dfe4dc" stroke-width="14" fill="none">
+              <rect width="800" height="400" fill="#eef3f4" />
+              <g stroke="#dbe6e8" stroke-width="14" fill="none">
                 <path d="M-20 120H820M-20 280H820M160 -20V420M420 -20V420M640 -20V420" />
               </g>
-              <g stroke="#e8ebe5" stroke-width="6" fill="none">
+              <g stroke="#e6eef0" stroke-width="6" fill="none">
                 <path d="M-20 60H820M-20 200H820M-20 350H820M60 -20V420M280 -20V420M540 -20V420M740 -20V420" />
               </g>
-              <path d="M-20 250 C 180 236, 320 210, 480 168 C 620 132, 720 108, 820 100" stroke="#cfdcd6" stroke-width="18" fill="none" />
-              <circle cx="420" cy="200" r="46" fill="#33566b" fill-opacity="0.08" />
-              <circle cx="420" cy="200" r="9" fill="#33566b" />
-              <path d="M420 200 L420 176" stroke="#33566b" stroke-width="3" stroke-linecap="round" />
+              <path d="M-20 250 C 180 236, 320 210, 480 168 C 620 132, 720 108, 820 100" stroke="#c7dfe2" stroke-width="18" fill="none" />
+              <circle cx="420" cy="200" r="46" fill="#0d92b8" fill-opacity="0.08" />
+              <circle cx="420" cy="200" r="9" fill="#0d92b8" />
+              <path d="M420 200 L420 176" stroke="#0d92b8" stroke-width="3" stroke-linecap="round" />
             </svg>
 
             <div class="map__prompt">
@@ -121,9 +121,8 @@ const breadcrumbs = {
         </div>
 
         <p class="map__note fine">
-          Free parking is available on site. If you have difficulty finding the entrance, call the
-          office at <a href={`tel:${practice.phoneHref}`}>{practice.phone}</a> and we will direct
-          you.
+          If you have difficulty finding the entrance or need parking directions, call the office at
+          <a href={`tel:${practice.phoneHref}`}>{practice.phone}</a> and we will direct you.
         </p>
       </div>
     </div>
@@ -145,7 +144,7 @@ const breadcrumbs = {
     overflow: hidden;
     padding-block: clamp(2.75rem, 2rem + 4vw, 5rem) clamp(2.5rem, 2rem + 3vw, 4rem);
     background:
-      radial-gradient(70% 130% at 90% 0%, rgba(51, 86, 107, 0.07) 0%, transparent 60%),
+      radial-gradient(70% 130% at 90% 0%, rgba(13, 146, 184, 0.09) 0%, transparent 60%),
       var(--bg);
   }
 
@@ -238,7 +237,7 @@ const breadcrumbs = {
     overflow: hidden;
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
-    background: #eef1ec;
+    background: #eef3f4;
   }
 
   .map :global(iframe) {

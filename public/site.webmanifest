@@ -4,8 +4,8 @@
   "description": "Orthopaedic surgery practice of John Hearst Welborn, MD in Pinole, California.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fbfaf8",
-  "theme_color": "#33566b",
+  "background_color": "#f9fbfc",
+  "theme_color": "#0d92b8",
   "icons": [
     {
       "src": "/favicon.svg",

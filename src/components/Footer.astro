@@ -18,8 +18,7 @@ const siteLinks = [
   <div class="container">
     <div class="site-footer__grid">
       <div class="site-footer__identity">
-        <Logo variant="mark" tone="invert" size={44} class="site-footer__logo" />
-        <p class="site-footer__practice">{practice.name}</p>
+        <Logo variant="horizontal" tone="tile" height={40} class="site-footer__logo" />
         <p class="site-footer__doctor">{practice.doctor.fullName}</p>
         <p class="site-footer__specialty">{practice.doctor.specialty}</p>
       </div>
@@ -116,18 +115,10 @@ const siteLinks = [
   }
 
   .site-footer__logo {
-    margin-bottom: 1.1rem;
-  }
-
-  .site-footer__practice {
-    font-size: 1.25rem;
-    font-weight: 600;
-    letter-spacing: -0.018em;
-    color: #fff;
+    margin-bottom: 1.35rem;
   }
 
   .site-footer__doctor {
-    margin-top: 0.6rem;
     color: var(--ink-invert);
   }
 
@@ -135,7 +126,7 @@ const siteLinks = [
     font-size: var(--step-xs);
     letter-spacing: 0.13em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.52);
+    color: rgba(255, 255, 255, 0.58); /* 5.0:1 on --accent-dark */
     margin-top: 0.35rem;
   }
 
@@ -144,7 +135,7 @@ const siteLinks = [
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.58);
     margin-bottom: 1rem;
   }
 
@@ -162,7 +153,7 @@ const siteLinks = [
   .site-footer__label {
     display: inline-block;
     min-width: 3.4rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.58); /* 5.0:1 on --accent-dark */
   }
 
   .site-footer__note {
@@ -214,7 +205,7 @@ const siteLinks = [
   .site-footer__copyright {
     font-size: var(--step-xs);
     line-height: 1.65;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.58);
   }
 
   .site-footer__copyright {

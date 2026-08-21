@@ -6,27 +6,27 @@
   -->
   <defs>
     <linearGradient id="pGround" x1="0.1" y1="1" x2="0.9" y2="0">
-      <stop offset="0%" stop-color="#101F27"/>
-      <stop offset="52%" stop-color="#1D3745"/>
-      <stop offset="100%" stop-color="#35596F"/>
+      <stop offset="0%" stop-color="#04262F"/>
+      <stop offset="52%" stop-color="#083E4E"/>
+      <stop offset="100%" stop-color="#116A85"/>
     </linearGradient>
 
     <radialGradient id="pGlow" cx="0.72" cy="0.22" r="0.78">
-      <stop offset="0%" stop-color="#93B7CA" stop-opacity="0.38"/>
-      <stop offset="58%" stop-color="#5A7C90" stop-opacity="0.10"/>
-      <stop offset="100%" stop-color="#101F27" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#43A4A4" stop-opacity="0.38"/>
+      <stop offset="58%" stop-color="#43A4A4" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#04262F" stop-opacity="0"/>
     </radialGradient>
 
     <linearGradient id="pArc" x1="0" y1="1" x2="0.6" y2="0">
-      <stop offset="0%" stop-color="#CFE0EA" stop-opacity="0"/>
-      <stop offset="38%" stop-color="#CFE0EA" stop-opacity="0.7"/>
-      <stop offset="100%" stop-color="#CFE0EA" stop-opacity="0.1"/>
+      <stop offset="0%" stop-color="#BFE7E7" stop-opacity="0"/>
+      <stop offset="38%" stop-color="#BFE7E7" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#BFE7E7" stop-opacity="0.1"/>
     </linearGradient>
 
     <linearGradient id="pArcSoft" x1="0" y1="1" x2="0.7" y2="0">
-      <stop offset="0%" stop-color="#9FC0D2" stop-opacity="0"/>
-      <stop offset="46%" stop-color="#9FC0D2" stop-opacity="0.42"/>
-      <stop offset="100%" stop-color="#9FC0D2" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#7ABC8D" stop-opacity="0"/>
+      <stop offset="46%" stop-color="#7ABC8D" stop-opacity="0.42"/>
+      <stop offset="100%" stop-color="#7ABC8D" stop-opacity="0"/>
     </linearGradient>
 
     <filter id="pGrain" x="0" y="0" width="100%" height="100%">
@@ -48,13 +48,13 @@
           stroke="url(#pArcSoft)" stroke-width="1.2"/>
   </g>
 
-  <g fill="none" stroke="#CFE0EA" transform="translate(690 342)">
+  <g fill="none" stroke="#BFE7E7" transform="translate(690 342)">
     <circle r="72"  stroke-opacity="0.24" stroke-width="1.4"/>
     <circle r="132" stroke-opacity="0.13" stroke-width="1.1"/>
     <circle r="204" stroke-opacity="0.07" stroke-width="1"/>
   </g>
 
-  <g stroke="#CFE0EA" stroke-opacity="0.05" stroke-width="1">
+  <g stroke="#BFE7E7" stroke-opacity="0.05" stroke-width="1">
     <path d="M0 470 H1000"/>
     <path d="M0 840 H1000"/>
   </g>

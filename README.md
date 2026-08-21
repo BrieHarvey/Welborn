@@ -27,7 +27,7 @@ photographs.**
 | Training, certification, hospital affiliations           | `src/data/about.js`                |
 | Privacy policy wording                                   | `src/pages/privacy-policy.astro`   |
 | Colours, fonts, spacing                                  | `src/styles/global.css` (the `:root` block at the top) |
-| The logo mark                                            | `src/components/Logo.astro` (see “Brand and artwork”) |
+| The logo                                                 | `public/images/logo-*.svg` (see “Brand and artwork”) |
 
 Each of those files is commented. Change the text between the quotation marks
 and leave the punctuation around it alone.
@@ -187,38 +187,77 @@ Export as JPEG at around 75–80% quality and keep each file under roughly 300 K
 
 ## Brand and artwork
 
-**The mark.** A “W” drawn as one continuous stroke whose final upstroke carries
-higher than the rest — the practice initial, and an upward line. It lives in
-`src/components/Logo.astro`, which is the single source of truth for its
-geometry. Three copies exist outside the component because they cannot import
-it, and all four must be changed together if the mark ever changes:
+**The logo.** The practice supplied the logo as a 2000 x 2000 PNG: the mark —
+a medical cross split blue and green, with a spine curving through it — above
+the words WELBORN / ORTHOPEDICS.
 
-- `src/components/Logo.astro` — the site header, footer and brand panels
-- `public/favicon.svg` — the browser tab
-- `scripts/apple-touch-icon.html` — the home-screen icon
-- `scripts/og-image.html` — the social sharing card
+A website needs that logo crisp in a 32px browser tab and on a 5K display, and
+it needs a version that fits a sticky header, which the tall stacked lockup does
+not. So each flat colour region of the supplied artwork is traced to a vector
+path, and four SVGs are generated from it:
 
-`Logo.astro` takes a `tone`: `brand` (white on the practice blue, the default),
-`invert` (white on a translucent badge, for dark artwork) and `ink` (no badge,
-follows the surrounding text colour).
+| File                    | What it is                       | Used by                          |
+| ----------------------- | -------------------------------- | -------------------------------- |
+| `logo-horizontal.svg`   | mark beside the words            | site header, footer, social card |
+| `logo-stacked.svg`      | the supplied lockup              | anywhere with vertical room      |
+| `logo-mark.svg`         | the mark alone                   | favicon, touch icon, watermark   |
+| `logo-wordmark.svg`     | the words alone                  | spare                            |
 
-**The artwork.** Three SVG files in `public/images/`, all drawn from the same
-geometry — sweeping arcs and concentric circles, echoing the mark:
+They all live in `public/images/` and are produced by:
+
+```bash
+pip install pillow numpy potracer
+python3 scripts/trace-logo.py path/to/logo.png
+```
+
+**If the practice can supply the original vector artwork** (`.ai`, `.eps` or
+`.svg` from whoever designed the logo), prefer it: export the four files above
+from it, drop them in `public/images/`, and delete `scripts/trace-logo.py`. A
+trace of a raster is very close but it is still a trace.
+
+**Two things to know when placing the logo.** The mark is drawn with white gaps
+between the spine and the cross, so it cannot sit directly on a dark background
+— the spine runs into the cross and the shape is lost. `Logo.astro` handles this
+with `tone="tile"`, which sets the logo on a white tile; that keeps the brand
+colours exact instead of flattening the logo to one colour. And the logo carries
+its own typeface, which is not the typeface of the site. That is normal: a
+logo is artwork, not text.
+
+**Colour.** Three colours, sampled from the supplied artwork:
+
+| Token           | Value     | Contrast on white | Use                                   |
+| --------------- | --------- | ----------------- | ------------------------------------- |
+| `--brand-blue`  | `#0d92b8` | 3.6:1             | graphics, borders, large type         |
+| `--brand-green` | `#7abc8d` | 2.2:1             | graphics only                         |
+| `--brand-teal`  | `#43a4a4` | 3.0:1             | graphics only                         |
+
+None of them are used for body text or links, and that is deliberate. The logo
+blue reaches 3.6:1 against white — fine for a border or a big heading, short of
+the 4.5:1 that WCAG 2.1 AA asks of ordinary text. Small text and links use
+`--accent` (`#0a6e8a`, 5.8:1), which is the same blue taken down until it is
+safe to read. Buttons and dark bands follow the same rule. The result looks like
+the logo without becoming hard to read.
+
+The green appears in exactly two places in the interface — the dots in the
+credentials strip and the artwork — and nowhere else. Used more than that it
+stops reading as a brand colour and starts reading as decoration.
+
+Every colour on the site is defined in the `:root` block at the top of
+`src/styles/global.css`, with its contrast ratio in a comment beside it. If you
+change one, re-check the ratio.
+
+**The artwork.** Three SVGs in `public/images/`, drawn from the same sweeping
+arc geometry, in the brand's colours:
 
 | File                    | Where it is used                                     |
 | ----------------------- | ---------------------------------------------------- |
-| `art-arcs-wide.svg`     | Hero brand panel, call-to-action band, social card    |
-| `art-arcs-portrait.svg` | The portrait slots where Dr. Welborn’s photo will go  |
-| `art-arcs-light.svg`    | Behind interior page headings (`HeroArt.astro`)       |
+| `art-arcs-wide.svg`     | hero brand panel, call-to-action band, social card    |
+| `art-arcs-portrait.svg` | the portrait slots where Dr. Welborn's photo will go  |
+| `art-arcs-light.svg`    | behind interior page headings (`HeroArt.astro`)       |
 
-They are vector, so they are small, stay sharp at any size, and never date the
-way stock photography does. They are decorative: every one is marked
-`aria-hidden` or given an empty `alt`, so screen readers skip them.
-
-**Colour.** One restrained slate blue, defined once in `src/styles/global.css`
-as `--accent` / `--accent-deep` / `--accent-dark`, on a warm off-white rather
-than clinical pure white. Changing those three values re-colours the whole site,
-artwork included — the SVGs use the same hex values, so update them to match.
+They are vector, so they stay sharp at any size and never date the way stock
+photography does. They are decorative: each is marked `aria-hidden` or given an
+empty `alt`, so screen readers skip them.
 
 ---
 
@@ -287,6 +326,11 @@ body copy, 500 for labels and small UI, and 600 for headings and buttons — the
 `--weight-regular` / `--weight-medium` / `--weight-semibold` tokens in
 `src/styles/global.css`. If something needs more presence, change its size or
 colour rather than adding a fourth weight.
+
+The logo's wordmark is a different typeface, drawn into the logo artwork
+itself. That is deliberate and normal — a logo is a picture of a name, not text
+set in the page font — and it means the logo does not depend on any font being
+available.
 
 To change the typeface, replace the `.woff2` file and update the `@font-face`
 block at the top of `src/styles/global.css` along with the `--font-sans` token.
@@ -382,8 +426,8 @@ a placeholder pretending to be a credential.
 │   ├── _redirects             Short URLs (/insurance, /faq, /appointment)
 │   ├── fonts/                 Self-hosted typeface and its licence
 │   ├── forms/                 New patient PDFs go here
-│   └── images/                Brand artwork; photographs go here too
-├── scripts/                   Sources for the generated images, and render.py
+│   └── images/                Logo files and brand artwork; photographs too
+├── scripts/                   Logo tracing, generated images, render.py
 └── src/
     ├── data/                  ← ALL EDITABLE CONTENT LIVES HERE
     │   ├── site.js            Practice details, locations, navigation
