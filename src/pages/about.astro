@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Figure from '../components/Figure.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import CtaSection from '../components/CtaSection.astro';
 import Button from '../components/Button.astro';
@@ -46,15 +46,11 @@ const breadcrumbs = {
       </div>
 
       <div class="page-hero__media">
-        <Figure
+        <PhotoFrame
           alt={about.imageAlt}
           note="Portrait of Dr. Welborn. Editorial, natural light, portrait orientation, approximately 1200 × 1500."
-          panel={{
-            art: 'portrait',
-            kicker: practice.doctor.specialty,
-            title: practice.doctor.fullName,
-            sub: 'Pinole, California',
-          }}
+          caption={practice.doctor.fullName}
+          captionSub={practice.doctor.specialty}
           ratio="4 / 5"
           eager
         />
@@ -175,6 +171,9 @@ const breadcrumbs = {
 <style>
   /* ---------- Page hero (shared pattern) ---------- */
   .page-hero {
+    /* The decorative wash behind the image frame bleeds past the frame by
+       design; clip it here so it can never widen the page. */
+    overflow-x: clip;
     padding-block: clamp(2.75rem, 2rem + 4vw, 5.5rem) clamp(3rem, 2.2rem + 4vw, 5.5rem);
     background:
       radial-gradient(80% 120% at 88% 6%, rgba(13, 146, 184, 0.09) 0%, transparent 58%),
@@ -217,7 +216,7 @@ const breadcrumbs = {
     }
 
     .page-hero__media {
-      max-width: 24rem;
+      max-width: none;
       margin-inline: 0;
     }
   }

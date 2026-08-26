@@ -1,0 +1,247 @@
+---
+/**
+ * PhotoFrame — the large editorial image area used in the hero and on the
+ * about page.
+ *
+ * ---------------------------------------------------------------------------
+ *  THIS IS WHERE THE PHOTOGRAPH OF DR. WELBORN GOES.
+ * ---------------------------------------------------------------------------
+ *  There is no photograph in the project yet, so the frame currently shows the
+ *  practice artwork with a nameplate. That is a stand-in, not the design: the
+ *  frame is built for a real photograph and looks considerably better with one.
+ *
+ *  To add the photograph:
+ *    1. Save it into public/images/ — for example dr-welborn-portrait.jpg
+ *    2. Add `src` to the <PhotoFrame> tag on the page:
+ *
+ *         <PhotoFrame
+ *           src="/images/dr-welborn-portrait.jpg"
+ *           alt="Dr. J. Hearst Welborn, MD in the Pinole office"
+ *           ratio="4 / 5"
+ *         />
+ *
+ *  The stand-in disappears and the photograph takes its place, cropped to the
+ *  frame and lazily loaded. Nothing else needs changing.
+ *
+ *  `note` describes the photograph intended for this slot. It is never shown to
+ *  visitors — it is written into the page source as a comment for whoever adds
+ *  the photography later. See README, "Swapping in photography".
+ * ---------------------------------------------------------------------------
+ */
+import Logo from './Logo.astro';
+
+interface Props {
+  /** Path to the photograph. While empty, the branded stand-in is shown. */
+  src?: string;
+  alt: string;
+  /** Description of the intended photograph, for developers. Not displayed. */
+  note?: string;
+  ratio?: string;
+  /** Caption shown under the frame. Also the stand-in's nameplate. */
+  caption?: string;
+  captionSub?: string;
+  /** The brand artwork used behind the stand-in. */
+  art?: 'portrait' | 'wide';
+  /** Set true for a frame visible on first paint (the hero). */
+  eager?: boolean;
+  width?: number;
+  height?: number;
+  class?: string;
+}
+
+const {
+  src = '',
+  alt,
+  note = '',
+  ratio = '4 / 5',
+  caption = '',
+  captionSub = '',
+  art = 'portrait',
+  eager = false,
+  width = 1200,
+  height = 1500,
+  class: className = '',
+} = Astro.props;
+
+const artwork =
+  art === 'wide' ? '/images/art-arcs-wide.svg' : '/images/art-arcs-portrait.svg';
+---
+
+<figure class:list={['frame', className]}>
+  <!-- A soft brand wash offset behind the frame, so the image sits in the page
+       rather than floating on it. Decorative. -->
+  <span class="frame__wash" aria-hidden="true"></span>
+
+  <div class="frame__window" style={`--frame-ratio: ${ratio};`}>
+    {note && <Fragment set:html={`<!-- Photography slot: ${note} -->`} />}
+
+    {
+      src ? (
+        <img
+          class="frame__photo"
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          loading={eager ? 'eager' : 'lazy'}
+          decoding={eager ? 'sync' : 'async'}
+          fetchpriority={eager ? 'high' : 'auto'}
+        />
+      ) : (
+        <div class="frame__standin">
+          {/* Between tablet and desktop the frame turns landscape, so the
+              landscape artwork is used there rather than a heavy crop of the
+              portrait one. A real photograph needs no such switch. */}
+          <picture>
+            <source
+              media="(min-width: 40.0625rem) and (max-width: 62rem)"
+              srcset="/images/art-arcs-wide.svg"
+            />
+            <img
+              class="frame__art"
+              src={artwork}
+              alt=""
+              width="1000"
+              height="1250"
+              loading={eager ? 'eager' : 'lazy'}
+              decoding={eager ? 'sync' : 'async'}
+            />
+          </picture>
+          <div class="frame__plate">
+            <Logo variant="horizontal" tone="tile" height={30} />
+          </div>
+        </div>
+      )
+    }
+  </div>
+
+  {
+    caption && (
+      <figcaption class="frame__caption">
+        <span class="frame__caption-name">{caption}</span>
+        {captionSub && <span class="frame__caption-sub">{captionSub}</span>}
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .frame {
+    position: relative;
+    margin: 0;
+    isolation: isolate;
+  }
+
+  /* ---- The wash behind the frame ----
+     `closest-side` is doing real work here: it sizes each gradient to the
+     nearest edge of its own box, so the colour is fully transparent before it
+     reaches any side. Sizing by percentage instead let the falloff run past the
+     box and get clipped, which drew a visible rectangle behind the image. */
+  .frame__wash {
+    position: absolute;
+    z-index: -1;
+    inset: -14% -16% -12% -14%;
+    pointer-events: none;
+    background:
+      radial-gradient(closest-side at 72% 22%, rgba(13, 146, 184, 0.32), transparent),
+      radial-gradient(closest-side at 24% 80%, rgba(122, 188, 141, 0.34), transparent);
+  }
+
+  /* ---- The image itself ---- */
+  .frame__window {
+    position: relative;
+    aspect-ratio: var(--frame-ratio, 4 / 5);
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    background: var(--accent-dark);
+    box-shadow: var(--shadow-frame);
+  }
+
+  .frame__standin picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .frame__photo,
+  .frame__art {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* A hairline inside the edge keeps the crop crisp against a pale page. */
+  .frame__window::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid rgba(8, 62, 78, 0.12);
+    pointer-events: none;
+  }
+
+  /* ---- The stand-in shown until a photograph is added ---- */
+  .frame__standin {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .frame__plate {
+    position: absolute;
+    left: clamp(1rem, 0.6rem + 1.4vw, 1.75rem);
+    bottom: clamp(1rem, 0.6rem + 1.4vw, 1.75rem);
+  }
+
+  /* ---- Caption ---- */
+  .frame__caption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-top: 1.15rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--brand-blue);
+  }
+
+  .frame__caption-name {
+    font-size: var(--step-small);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .frame__caption-sub {
+    font-size: var(--step-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* Between tablet and desktop the layout stacks, and a portrait crop across
+     the full column would run absurdly tall. A landscape crop reads better and
+     is a perfectly normal shape for a physician photograph. */
+  @media (min-width: 40.0625rem) and (max-width: 62rem) {
+    .frame__window {
+      aspect-ratio: 3 / 2;
+    }
+  }
+
+  @media (max-width: 62rem) {
+    .frame__wash {
+      inset: -10% -12% -10% -12%;
+    }
+  }
+
+  /* On phones the frame spans the column, so a bleeding glow would push past
+     the page edge and give the document a horizontal scrollbar. It is not
+     visible behind a full-width frame anyway.
+
+     NOTE: at wider sizes the wash deliberately extends past the frame. Any
+     section that hosts a PhotoFrame therefore needs `overflow-x: clip`. */
+  @media (max-width: 40rem) {
+    .frame__wash {
+      inset: 0;
+    }
+  }
+</style>

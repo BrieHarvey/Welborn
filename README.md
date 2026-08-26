@@ -167,42 +167,50 @@ emergencies, and directs emergencies to 911.
 
 ## Swapping in photography
 
-There are no photographs on the site yet. Rather than leave grey boxes, every
-photography slot currently shows a **brand panel** — the practice artwork, the
-mark, and a short nameplate (see “Brand and artwork” below). Those panels are
-designed to stand on their own, so the site is ready to go live before the
-photography is shot.
+**There are no photographs on the site yet, and the hero is built for one.**
+The large image area on the right of the homepage hero — and the matching one
+on the About page — is a `PhotoFrame`. While it has no photograph it shows the
+practice artwork with the logo on it. That stand-in is presentable enough to go
+live with, but it is a stand-in: the composition is designed around a real
+photograph of Dr. Welborn and improves markedly with one.
 
-To replace one with a real photograph:
+What to shoot, in priority order:
 
-1. Save the photograph into `public/images/` (for example
-   `public/images/dr-welborn-portrait.jpg`).
-2. Find the `<Figure ... />` tag for that slot and add a `src`:
+| Slot | Where it appears | Suggested size | Orientation |
+| ---- | ---------------- | -------------- | ----------- |
+| Dr. Welborn with a patient, or an environmental portrait in the office | homepage hero | 1200 × 1500 | Portrait |
+| Portrait of Dr. Welborn | homepage about section, About page | 1200 × 1500 | Portrait |
+
+To add one:
+
+1. Save it into `public/images/` — for example `dr-welborn-portrait.jpg`.
+2. Add `src` to the `<PhotoFrame>` tag on the page:
 
    ```astro
-   <Figure
+   <PhotoFrame
      src="/images/dr-welborn-portrait.jpg"
      alt="Dr. J. Hearst Welborn, MD in the Pinole office"
+     caption="John Hearst Welborn, MD"
+     captionSub="Orthopaedic Surgery"
      ratio="4 / 5"
    />
    ```
 
-The brand panel disappears and the photograph is served in its place, lazily
-loaded and correctly sized. The `alt` text should describe what is in the
-photograph — it is read aloud by screen readers and used by search engines.
-
-Each `<Figure>` also carries a `note` describing the photograph intended for
-that slot. It is never shown to visitors; it is written into the page source as
-an HTML comment so whoever shoots the photography can see what was planned.
-
-Photographs to source, in priority order:
-
-| Slot                | Where it appears           | Suggested size | Orientation |
-| ------------------- | -------------------------- | -------------- | ----------- |
-| Hero photograph     | `src/pages/index.astro`    | 1600 × 1200    | Landscape   |
-| Portrait of Dr. Welborn | `src/pages/index.astro`, `src/pages/about.astro` | 1200 × 1500 | Portrait |
+The stand-in disappears and the photograph takes its place, cropped to the
+frame and lazily loaded. Nothing else changes.
 
 Export as JPEG at around 75–80% quality and keep each file under roughly 300 KB.
+The frame crops to fill, so leave a little room around the subject — on tablet
+the same frame switches to a landscape crop.
+
+Each `<PhotoFrame>` also carries a `note` describing the photograph intended for
+that slot. It is never shown to visitors; it is written into the page source as
+an HTML comment for whoever adds the photography later.
+
+**One layout note if you reuse `PhotoFrame` elsewhere:** it draws a soft brand
+glow that deliberately extends past the frame, so the section containing it
+needs `overflow-x: clip` — otherwise the glow widens the page and the whole
+document scrolls sideways.
 
 ---
 

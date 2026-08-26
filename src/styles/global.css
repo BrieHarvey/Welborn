@@ -52,6 +52,7 @@
      like the logo without becoming hard to read. */
   --brand-blue: #0d92b8; /* 3.61:1 on white — graphics, borders, large type */
   --brand-green: #7abc8d; /* 2.23:1 — graphics only, never text */
+  --brand-green-deep: #5a8b68; /* 3.94:1 — the green where it must hold its own */
   --brand-teal: #43a4a4; /* 2.96:1 — graphics only, never text */
 
   /* Surfaces — a cool off-white that sits under the logo's blues without
@@ -132,12 +133,17 @@
   --radius-sm: 4px;
   --radius: 8px;
   --radius-lg: 14px;
+  --radius-xl: 22px; /* the large editorial image frames */
   --radius-pill: 999px;
 
   /* Very restrained elevation */
   --shadow-sm: 0 1px 2px rgba(8, 62, 78, 0.05);
   --shadow: 0 2px 4px rgba(8, 62, 78, 0.05), 0 8px 24px rgba(8, 62, 78, 0.06);
   --shadow-lift: 0 4px 8px rgba(8, 62, 78, 0.06), 0 16px 36px rgba(8, 62, 78, 0.09);
+  /* Deeper and softer, for the hero image only — it carries real visual weight
+     and would look pasted on with the same shadow as a card. */
+  --shadow-frame: 0 2px 6px rgba(8, 62, 78, 0.05), 0 18px 40px rgba(8, 62, 78, 0.1),
+    0 48px 80px -30px rgba(8, 62, 78, 0.16);
 
   /* Motion */
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);

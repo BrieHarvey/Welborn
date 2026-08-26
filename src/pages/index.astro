@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/Button.astro';
-import Figure from '../components/Figure.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
 import CredentialStrip from '../components/CredentialStrip.astro';
 import CtaSection from '../components/CtaSection.astro';
 import SectionHeader from '../components/SectionHeader.astro';
@@ -18,53 +18,58 @@ const pinole = locations.find((l) => l.id === 'pinole')!;
   description="Board-certified orthopaedic surgeon J. Hearst Welborn, MD treats hand, shoulder, knee and hip conditions, fractures and injuries in Pinole, California."
   canonical="/"
 >
-  <!-- ==================== HERO ==================== -->
+  <!-- ==================== HERO ====================
+       The hero and the credibility band below share one background and are
+       separated only by a hairline, so the page opens as a single composition
+       rather than a headline followed by a detached strip. -->
   <section class="hero" aria-labelledby="hero-heading">
     <div class="container hero__inner">
       <div class="hero__copy">
+        <p class="hero__eyebrow">
+          <span class="hero__doctor">{practice.doctor.fullName}</span>
+          <span class="hero__rule" aria-hidden="true"></span>
+          <span>{practice.doctor.specialty}</span>
+        </p>
+
         <h1 class="hero__headline" id="hero-heading">{hero.headline}</h1>
         <p class="hero__subhead">{hero.subhead}</p>
+
         <div class="btn-row hero__buttons">
           <Button href={hero.primaryButton.href}>{hero.primaryButton.label}</Button>
           <Button href={hero.secondaryButton.href} variant="secondary">
             {hero.secondaryButton.label}
           </Button>
         </div>
+
+        <p class="hero__place">
+          {pinole.street}, {cityLine(pinole)}
+          <a class="hero__call" href={`tel:${practice.phoneHref}`}>{practice.phone}</a>
+        </p>
       </div>
 
       <div class="hero__media">
-        <Figure
+        <PhotoFrame
           alt={hero.imageAlt}
-          note="Hero photograph — a warm, human consultation moment. Landscape, approximately 1600 × 1200."
-          panel={{
-            art: 'wide',
-            kicker: 'Pinole, California',
-            title: 'Private practice orthopaedic surgery',
-            sub: `${pinole.street}`,
-          }}
-          ratio="4 / 3"
+          note="Hero photograph — Dr. Welborn with a patient, or an environmental portrait in the Pinole office. Portrait orientation, approximately 1200 × 1500. See PhotoFrame.astro."
+          caption={practice.doctor.fullName}
+          captionSub={practice.doctor.specialty}
+          ratio="4 / 5"
           eager
         />
       </div>
     </div>
-  </section>
 
-  <!-- ==================== CREDIBILITY ==================== -->
-  <CredentialStrip />
+    <!-- ==================== CREDIBILITY ==================== -->
+    <CredentialStrip />
+  </section>
 
   <!-- ==================== ABOUT ==================== -->
   <section class="section about" aria-labelledby="about-heading">
     <div class="container about__inner">
       <div class="about__media reveal">
-        <Figure
+        <PhotoFrame
           alt={about.imageAlt}
           note="Portrait of Dr. Welborn. Editorial, natural light, portrait orientation, approximately 1200 × 1500."
-          panel={{
-            art: 'portrait',
-            kicker: practice.doctor.specialty,
-            title: practice.doctor.fullName,
-            sub: 'Pinole, California',
-          }}
           ratio="4 / 5"
         />
         <ul class="about__credentials">
@@ -241,71 +246,150 @@ const pinole = locations.find((l) => l.id === 'pinole')!;
 </BaseLayout>
 
 <style>
-  /* ---------- Hero ---------- */
+  /* ---------- Hero ----------
+     The hero and the credibility band share this background, so the page opens
+     as one composition. The band supplies its own top hairline. */
   .hero {
-    padding-block: clamp(3rem, 2rem + 5vw, 6.5rem) clamp(3.5rem, 2.5rem + 5vw, 7rem);
+    /* The decorative wash behind the image frame bleeds past the frame by
+       design; clip it here so it can never widen the page. */
+    overflow-x: clip;
+    padding-top: clamp(2.5rem, 1.6rem + 3.4vw, 4.75rem);
     background:
-      radial-gradient(80% 120% at 88% 8%, rgba(13, 146, 184, 0.09) 0%, transparent 58%),
-      var(--bg);
+      radial-gradient(58% 70% at 82% 4%, rgba(13, 146, 184, 0.1) 0%, transparent 62%),
+      radial-gradient(48% 60% at 96% 52%, rgba(122, 188, 141, 0.09) 0%, transparent 66%),
+      linear-gradient(180deg, var(--surface) 0%, var(--bg) 62%);
   }
 
   .hero__inner {
     display: grid;
-    grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
-    gap: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
+    /* The image takes a little under half the width — substantial enough to
+       carry the page without crowding the headline. */
+    grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+    gap: clamp(2.5rem, 1.2rem + 4.5vw, 5rem);
     align-items: center;
+    padding-bottom: clamp(2.75rem, 1.8rem + 3.6vw, 5rem);
   }
 
+  /* ---- Eyebrow: the surgeon's name, which the hero did not previously carry ---- */
+  .hero__eyebrow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.85rem;
+    font-size: var(--step-xs);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .hero__doctor {
+    color: var(--accent);
+  }
+
+  .hero__rule {
+    width: 1.75rem;
+    height: 1px;
+    background: var(--line-strong);
+    opacity: 0.55;
+  }
+
+  /* ---- Headline ----
+     Deliberately smaller than the old display size. At 4.4rem it dominated the
+     screen and pushed the buttons below the fold; the weight of the page now
+     comes from the composition rather than from type size alone. */
   .hero__headline {
-    font-size: var(--step-display);
-    line-height: 1.07;
-    letter-spacing: -0.03em;
-    /* Wide enough for one sentence per line on desktop */
-    max-width: 19ch;
+    margin-top: clamp(1.1rem, 0.9rem + 0.8vw, 1.6rem);
+    font-size: clamp(2.25rem, 1.5rem + 2.6vw, 3.5rem);
+    line-height: 1.08;
+    letter-spacing: -0.032em;
+    text-wrap: balance;
+    max-width: 15ch;
   }
 
   .hero__subhead {
-    margin-top: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    margin-top: clamp(1.1rem, 0.9rem + 0.7vw, 1.5rem);
     font-size: var(--step-lead);
-    line-height: 1.6;
+    line-height: 1.62;
     color: var(--ink-3);
-    max-width: 34rem;
+    max-width: 32rem;
   }
 
   .hero__buttons {
+    margin-top: clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
+  }
+
+  /* ---- The office line under the buttons ---- */
+  .hero__place {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
     margin-top: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+    padding-top: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    border-top: 1px solid var(--line);
+    max-width: 32rem;
+    font-size: var(--step-small);
+    color: var(--ink-3);
+  }
+
+  .hero__call {
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--accent-tint-2);
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .hero__call:hover {
+    border-bottom-color: var(--accent);
   }
 
   .hero__media {
     position: relative;
+    /* Keeps the frame from growing unreadably tall on very wide screens. */
+    max-width: 30rem;
+    margin-left: auto;
+    width: 100%;
   }
 
-  /* A thin accent rule anchoring the image, purely decorative */
-  .hero__media::before {
-    content: '';
-    position: absolute;
-    left: -1.25rem;
-    top: 2.5rem;
-    bottom: 2.5rem;
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, var(--accent-tint-2), transparent);
-  }
-
+  /* ---- Responsive ---- */
   @media (max-width: 62rem) {
     .hero__inner {
       grid-template-columns: 1fr;
+      gap: clamp(2.25rem, 1.8rem + 2vw, 3rem);
     }
 
     .hero__headline {
-      max-width: 16ch;
+      max-width: 18ch;
     }
 
-    .hero__media::before {
+    .hero__media {
+      max-width: none;
+      margin-inline: 0;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .hero__headline {
+      max-width: none;
+    }
+
+    /* The eyebrow wraps onto two lines here, which left the little rule
+       hanging off the end of the first one. */
+    .hero__rule {
       display: none;
     }
   }
 
   /* ---------- About ---------- */
+  /* Hosts a PhotoFrame, whose decorative wash bleeds past the frame at wider
+     sizes. Clip so it can never widen the page. */
+  .about {
+    overflow-x: clip;
+  }
+
   .about__inner {
     display: grid;
     grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
@@ -328,12 +412,16 @@ const pinole = locations.find((l) => l.id === 'pinole')!;
     gap: 0.2rem;
   }
 
+  /* Set at reading size, not as a headline figure. "30+" already appears as a
+     large number in the credibility band at the top of the page; repeating it
+     at that scale here read as a stutter rather than as emphasis. Both facts
+     are still on the page, just no longer competing with the band. */
   .about__credential-value {
-    font-size: 1.375rem;
+    font-size: var(--step-body);
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     color: var(--ink);
-    line-height: 1.2;
+    line-height: 1.3;
   }
 
   .about__credential-label {

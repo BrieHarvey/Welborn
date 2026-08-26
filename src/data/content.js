@@ -27,12 +27,28 @@ export const hero = {
 //  CREDIBILITY STRIP  (directly beneath the hero)
 // ---------------------------------------------------------------------------
 
-export const credentials = [
-  'Board-Certified Orthopaedic Surgeon',
-  '30 Years of Experience',
-  '4000 surgeries performed',
-  'Most insurance & workers\' comp accepted',
-];
+//  The practice supplied these four lines:
+//
+//      Board-Certified Orthopaedic Surgeon
+//      30 Years of Experience
+//      4000 surgeries performed
+//      Most insurance & workers' comp accepted
+//
+//  They are unchanged below — only the typesetting differs. The two that lead
+//  with a number are split so the number can be set large with its wording
+//  beneath it; the two that are statements are shown as statements. Nothing is
+//  added to the claims: "30+" matches the practice's own "more than 30 years"
+//  in the about copy, and the surgery count is printed exactly as given.
+
+export const credentials = {
+  /* Set as large numerals. `figure` is the number, `label` its wording. */
+  figures: [
+    { figure: '30+', label: 'Years of experience' },
+    { figure: '4,000', label: 'Surgeries performed' },
+  ],
+  /* Set as statements, at reading size. */
+  statements: ['Board-Certified Orthopaedic Surgeon', "Most insurance & workers' comp accepted"],
+};
 
 // ---------------------------------------------------------------------------
 //  HOMEPAGE ABOUT SECTION
