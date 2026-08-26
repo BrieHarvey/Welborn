@@ -19,6 +19,7 @@ photographs.**
 | I want to change…                                       | Edit this file                     |
 | ------------------------------------------------------- | ---------------------------------- |
 | Phone, fax, email, address, office locations, office hours | `src/data/site.js`              |
+| Where appointment requests are emailed                   | `src/data/site.js` (`appointmentInbox`) |
 | Navigation links and the "Request an Appointment" button | `src/data/site.js`                 |
 | Homepage headline, about text, call-to-action wording    | `src/data/content.js`              |
 | Credentials strip under the hero ("30 Years of Experience"…) | `src/data/content.js`          |
@@ -111,19 +112,39 @@ the submission. This project ships with a small Cloudflare Pages Function at
 `functions/api/appointment.js` that does it. It deploys with the site; there is
 no separate server to run or pay for.
 
-**It needs two environment variables before it can send anything.** In the
+### Where requests are delivered
+
+The inbox is `appointmentInbox` in `src/data/site.js`:
+
+```js
+export const appointmentInbox = 'welbornappointments@gmail.com';
+```
+
+Change that line and redeploy. Several addresses work too — separate them with
+commas. This address is only ever used server-side; it is never printed on the
+website. The address patients see is `practice.email`, near the top of the same
+file.
+
+### The one thing that must be set in Cloudflare
+
+**The form still cannot send anything until an API key is added.** In the
 Cloudflare Pages project, under **Settings → Environment variables**, add:
 
 | Variable         | Value                                                          |
 | ---------------- | -------------------------------------------------------------- |
-| `RESEND_API_KEY` | An API key from [resend.com](https://resend.com) (free tier is sufficient) |
-| `NOTIFY_EMAIL`   | Where requests should arrive, e.g. `office@welbornortho.com`    |
-| `MAIL_FROM`      | *(optional)* the "from" address, on a domain verified in Resend. Defaults to `website@welbornortho.com` |
+| `RESEND_API_KEY` | An API key from [resend.com](https://resend.com) (the free tier is enough) |
+| `NOTIFY_EMAIL`   | *(optional)* overrides `appointmentInbox` — useful for pointing a staging deploy at a different inbox |
+| `MAIL_FROM`      | *(optional)* the "from" address. Defaults to `website@welbornortho.com` |
 
-Resend requires you to verify the sending domain — this is what stops the
-messages landing in spam. Their dashboard walks through adding the DNS records.
+**A Gmail address can receive requests but cannot send them.** Resend — like
+every other mail service — will only send *from* a domain you have verified,
+which is what keeps the messages out of spam folders. So `MAIL_FROM` has to be
+something like `website@welbornortho.com`, and `welbornortho.com` has to be
+verified in the Resend dashboard by adding a few DNS records; their setup page
+walks through it. The delivery address is unaffected by any of this — Gmail,
+Outlook or anything else is fine on the receiving end.
 
-**Until those variables are set**, the form does not pretend to work: it tells
+**Until `RESEND_API_KEY` is set**, the form does not pretend to work: it tells
 the visitor that online requests are not enabled yet and asks them to call the
 office. It never shows a confirmation for a message that went nowhere.
 

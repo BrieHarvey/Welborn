@@ -4,23 +4,31 @@
  * Receives the appointment request form and emails it to the office.
  *
  * This is a Cloudflare Pages Function. It deploys automatically with the site —
- * there is no separate server to run — but it needs two environment variables
- * set in the Cloudflare dashboard before it can send anything:
+ * there is no separate server to run.
+ *
+ * Requests are delivered to `appointmentInbox` in src/data/site.js. Change the
+ * address there; nothing in this file needs editing.
+ *
+ * One environment variable must be set in the Cloudflare dashboard before
+ * anything can actually be sent:
  *
  *   RESEND_API_KEY   an API key from resend.com
- *   NOTIFY_EMAIL     where requests should be delivered, e.g. office@welbornortho.com
  *
  * Optional:
- *   MAIL_FROM        the "from" address, on a domain verified with Resend.
- *                    Defaults to website@welbornortho.com
+ *   NOTIFY_EMAIL     overrides `appointmentInbox` — handy for pointing a
+ *                    staging deploy at a different inbox
+ *   MAIL_FROM        the "from" address, which must be on a domain verified
+ *                    with Resend. Defaults to website@welbornortho.com
  *
- * Until RESEND_API_KEY and NOTIFY_EMAIL are set, the endpoint returns a clear
- * message asking the visitor to call the office. It never pretends to have
- * delivered a message it did not deliver.
+ * Until RESEND_API_KEY is set, the endpoint returns a clear message asking the
+ * visitor to call the office. It never pretends to have delivered a message it
+ * did not deliver.
  *
  * Full setup instructions are in the README under "Appointment form".
  * ---------------------------------------------------------------------------
  */
+
+import { appointmentInbox } from '../../src/data/site.js';
 
 const FIELDS = [
   ['firstName', 'First name', 80],
@@ -129,7 +137,7 @@ export async function onRequestPost({ request, env }) {
   }
 
   const apiKey = env.RESEND_API_KEY;
-  const notify = env.NOTIFY_EMAIL;
+  const notify = env.NOTIFY_EMAIL || appointmentInbox;
 
   // Honest failure: if delivery is not configured, say so rather than
   // showing a confirmation for a message that went nowhere.

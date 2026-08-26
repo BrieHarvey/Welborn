@@ -119,6 +119,24 @@ export const primaryCta = {
 export const formEndpoint = '/api/appointment';
 
 // ---------------------------------------------------------------------------
+//  WHERE APPOINTMENT REQUESTS ARE DELIVERED
+// ---------------------------------------------------------------------------
+//  The inbox that receives submissions from the appointment form. Change it
+//  here and the Pages Function picks it up on the next deploy.
+//
+//  Several addresses are allowed — separate them with commas:
+//    appointmentInbox: 'one@example.com, two@example.com'
+//
+//  Setting NOTIFY_EMAIL in the Cloudflare dashboard overrides this, which is
+//  useful for pointing a staging deploy somewhere else.
+//
+//  NOTE: this is only the delivery address. It is never shown on the website —
+//  the address patients see is `practice.email` at the top of this file.
+// ---------------------------------------------------------------------------
+
+export const appointmentInbox = 'welbornappointments@gmail.com';
+
+// ---------------------------------------------------------------------------
 //  LEGAL / FOOTER
 // ---------------------------------------------------------------------------
 
