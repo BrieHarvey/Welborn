@@ -100,7 +100,7 @@ site automatically. Pull requests get their own preview URL, so changes can be
 reviewed before they go live.
 
 **Custom domain** — in the Pages project, open **Custom domains → Set up a
-custom domain** and add `welbornortho.com` (and `www.welbornortho.com`).
+custom domain** and add `welbornorthopedics.com` (and `www.welbornorthopedics.com`).
 Cloudflare issues the HTTPS certificate automatically.
 
 ---
@@ -134,12 +134,12 @@ Cloudflare Pages project, under **Settings → Environment variables**, add:
 | ---------------- | -------------------------------------------------------------- |
 | `RESEND_API_KEY` | An API key from [resend.com](https://resend.com) (the free tier is enough) |
 | `NOTIFY_EMAIL`   | *(optional)* overrides `appointmentInbox` — useful for pointing a staging deploy at a different inbox |
-| `MAIL_FROM`      | *(optional)* the "from" address. Defaults to `website@welbornortho.com` |
+| `MAIL_FROM`      | *(optional)* the "from" address. Defaults to `website@welbornorthopedics.com` |
 
 **A Gmail address can receive requests but cannot send them.** Resend — like
 every other mail service — will only send *from* a domain you have verified,
 which is what keeps the messages out of spam folders. So `MAIL_FROM` has to be
-something like `website@welbornortho.com`, and `welbornortho.com` has to be
+something like `website@welbornorthopedics.com`, and `welbornorthopedics.com` has to be
 verified in the Resend dashboard by adding a few DNS records; their setup page
 walks through it. The delivery address is unaffected by any of this — Gmail,
 Outlook or anything else is fine on the receiving end.

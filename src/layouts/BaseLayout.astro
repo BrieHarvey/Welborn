@@ -26,7 +26,7 @@ const {
   bodyClass = '',
 } = Astro.props;
 
-const siteOrigin = Astro.site?.origin ?? 'https://welbornortho.com';
+const siteOrigin = Astro.site?.origin ?? 'https://welbornorthopedics.com';
 const canonicalUrl = new URL(canonical ?? Astro.url.pathname, siteOrigin).href.replace(/\/$/, '') || siteOrigin;
 const ogImage = new URL('/og-image.png', siteOrigin).href;
 
@@ -108,7 +108,7 @@ const jsonLd = [practiceSchema, physicianSchema, ...schema];
     <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex, follow" />}
 
-    <meta name="theme-color" content="#33566b" />
+    <meta name="theme-color" content="#0d92b8" />
     <meta name="color-scheme" content="light" />
     <meta name="format-detection" content="telephone=no" />
 

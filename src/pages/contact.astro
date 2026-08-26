@@ -5,7 +5,7 @@ import ContactInfo from '../components/ContactInfo.astro';
 import AppointmentForm from '../components/AppointmentForm.astro';
 import { practice, locations, primaryLocation, officeHours, fullAddress } from '../data/site.js';
 
-const siteOrigin = Astro.site?.origin ?? 'https://welbornortho.com';
+const siteOrigin = Astro.site?.origin ?? 'https://welbornorthopedics.com';
 const mapEmbed = `https://www.google.com/maps?q=${encodeURIComponent(primaryLocation.mapQuery)}&output=embed`;
 const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(primaryLocation.mapQuery)}`;
 

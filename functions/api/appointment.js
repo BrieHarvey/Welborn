@@ -18,7 +18,7 @@
  *   NOTIFY_EMAIL     overrides `appointmentInbox` — handy for pointing a
  *                    staging deploy at a different inbox
  *   MAIL_FROM        the "from" address, which must be on a domain verified
- *                    with Resend. Defaults to website@welbornortho.com
+ *                    with Resend. Defaults to website@welbornorthopedics.com
  *
  * Until RESEND_API_KEY is set, the endpoint returns a clear message asking the
  * visitor to call the office. It never pretends to have delivered a message it
@@ -150,7 +150,7 @@ export async function onRequestPost({ request, env }) {
     );
   }
 
-  const from = env.MAIL_FROM || 'website@welbornortho.com';
+  const from = env.MAIL_FROM || 'website@welbornorthopedics.com';
   const name = `${data.firstName} ${data.lastName}`;
 
   const lines = FIELDS.filter(([key]) => data[key]).map(

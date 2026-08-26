@@ -8,7 +8,7 @@ import sitemap from '@astrojs/sitemap';
 // Change this one line if the practice moves to a different domain. It is used
 // to build canonical URLs, Open Graph tags, the sitemap and robots.txt.
 // ---------------------------------------------------------------------------
-const SITE_URL = 'https://welbornortho.com';
+const SITE_URL = 'https://welbornorthopedics.com';
 
 export default defineConfig({
   site: SITE_URL,

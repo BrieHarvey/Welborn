@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://welbornortho.com/sitemap-index.xml
+Sitemap: https://welbornorthopedics.com/sitemap-index.xml
